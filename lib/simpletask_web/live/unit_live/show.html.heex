@@ -1,0 +1,36 @@
+<.header>
+  Unit <%= @unit.id %>
+  <:subtitle>This is a unit record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/units/#{@unit}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit unit</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @unit.name %></:item>
+  <:item title="Document cnes"><%= @unit.document_cnes %></:item>
+  <:item title="Document cnpj"><%= @unit.document_cnpj %></:item>
+  <:item title="Unit type"><%= @unit.unit_type %></:item>
+  <:item title="Address"><%= @unit.address %></:item>
+  <:item title="Address number"><%= @unit.address_number %></:item>
+  <:item title="Address complement"><%= @unit.address_complement %></:item>
+  <:item title="Address city"><%= @unit.address_city %></:item>
+  <:item title="Address uf"><%= @unit.address_uf %></:item>
+  <:item title="Phone"><%= @unit.phone %></:item>
+  <:item title="Email"><%= @unit.email %></:item>
+</.list>
+
+<.back navigate={~p"/units"}>Back to units</.back>
+
+<.modal :if={@live_action == :edit} id="unit-modal" show on_cancel={JS.patch(~p"/units/#{@unit}")}>
+  <.live_component
+    module={SimpletaskWeb.UnitLive.FormComponent}
+    id={@unit.id}
+    title={@page_title}
+    action={@live_action}
+    unit={@unit}
+    patch={~p"/units/#{@unit}"}
+  />
+</.modal>

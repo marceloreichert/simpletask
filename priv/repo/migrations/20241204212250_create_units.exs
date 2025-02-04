@@ -16,7 +16,9 @@ defmodule Simpletask.Repo.Migrations.CreateUnits do
       add :email, :string
 
       add :user_id, references(:users, on_delete: :delete_all, type: :binary_id), null: false
-      add :unit_type_id, references(:unit_types, on_delete: :delete_all, type: :binary_id), null: false
+
+      add :unit_type_id, references(:unit_types, on_delete: :delete_all, type: :binary_id),
+        null: false
 
       timestamps(type: :utc_datetime)
     end

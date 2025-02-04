@@ -12,7 +12,7 @@
   rows={@streams.unit_types}
   row_click={fn {_id, unit_type} -> JS.navigate(~p"/unit_types/#{unit_type}") end}
 >
-  <:col :let={{_id, unit_type}} label="Name"><%= unit_type.name %></:col>
+  <:col :let={{_id, unit_type}} label="Name">{unit_type.name}</:col>
   <:action :let={{_id, unit_type}}>
     <div class="sr-only">
       <.link navigate={~p"/unit_types/#{unit_type}"}>Show</.link>
@@ -29,7 +29,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="unit_type-modal" show on_cancel={JS.patch(~p"/unit_types")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="unit_type-modal"
+  show
+  on_cancel={JS.patch(~p"/unit_types")}
+>
   <.live_component
     module={SimpletaskWeb.UnitTypeLive.FormComponent}
     id={@unit_type.id || :new}

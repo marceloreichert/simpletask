@@ -8,7 +8,7 @@ defmodule SimpletaskWeb.UnitLive.FormComponent do
     ~H"""
     <div>
       <.header>
-        <%= @title %>
+        {@title}
         <:subtitle>Use this form to manage unit records in your database.</:subtitle>
       </.header>
 

@@ -4,9 +4,45 @@ defmodule SimpletaskWeb.UnitLiveTest do
   import Phoenix.LiveViewTest
   import Simpletask.UnitsFixtures
 
-  @create_attrs %{name: "some name", address: "some address", document_cnes: "some document_cnes", document_cnpj: "some document_cnpj", unit_type: 42, address_number: 42, address_complement: "some address_complement", address_city: "some address_city", address_uf: "some address_uf", phone: "some phone", email: "some email"}
-  @update_attrs %{name: "some updated name", address: "some updated address", document_cnes: "some updated document_cnes", document_cnpj: "some updated document_cnpj", unit_type: 43, address_number: 43, address_complement: "some updated address_complement", address_city: "some updated address_city", address_uf: "some updated address_uf", phone: "some updated phone", email: "some updated email"}
-  @invalid_attrs %{name: nil, address: nil, document_cnes: nil, document_cnpj: nil, unit_type: nil, address_number: nil, address_complement: nil, address_city: nil, address_uf: nil, phone: nil, email: nil}
+  @create_attrs %{
+    name: "some name",
+    address: "some address",
+    document_cnes: "some document_cnes",
+    document_cnpj: "some document_cnpj",
+    unit_type: 42,
+    address_number: 42,
+    address_complement: "some address_complement",
+    address_city: "some address_city",
+    address_uf: "some address_uf",
+    phone: "some phone",
+    email: "some email"
+  }
+  @update_attrs %{
+    name: "some updated name",
+    address: "some updated address",
+    document_cnes: "some updated document_cnes",
+    document_cnpj: "some updated document_cnpj",
+    unit_type: 43,
+    address_number: 43,
+    address_complement: "some updated address_complement",
+    address_city: "some updated address_city",
+    address_uf: "some updated address_uf",
+    phone: "some updated phone",
+    email: "some updated email"
+  }
+  @invalid_attrs %{
+    name: nil,
+    address: nil,
+    document_cnes: nil,
+    document_cnpj: nil,
+    unit_type: nil,
+    address_number: nil,
+    address_complement: nil,
+    address_city: nil,
+    address_uf: nil,
+    phone: nil,
+    email: nil
+  }
 
   defp create_unit(_) do
     unit = unit_fixture()

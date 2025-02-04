@@ -19,6 +19,7 @@ defmodule Simpletask.Units do
   """
   def list_units do
     Repo.all(Unit)
+  |> Repo.preload(:unit_type)
   end
 
   @doc """

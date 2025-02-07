@@ -34,17 +34,13 @@ defmodule SimpletaskWeb.Layouts do
         is_active: true,
         items: [
           %{
-            title: "Unidade",
-            url: ~p"/units"
-          },
-          %{
             title: "Tipo de Unidade",
             url: ~p"/unit_types"
           },
           %{
-            title: "Setting",
-            url: ~p"/users/settings"
-          }
+            title: "Unidade",
+            url: ~p"/units"
+          },
         ]
       }
     ]

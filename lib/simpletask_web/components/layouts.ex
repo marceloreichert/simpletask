@@ -11,136 +11,248 @@ defmodule SimpletaskWeb.Layouts do
   use SimpletaskWeb, :html
   use SaladUI
 
+  import Lucideicons, except: [import: 1, quote: 1, menu: 1, link: 1]
+
   def versions(), do: ["0.0.1"]
+
+  def teams() do
+    [
+      %{
+        name: "Simpletask",
+        logo: &gallery_vertical_end/1,
+        plan: "Medical"
+      }
+    ]
+  end
 
   def nav_main() do
     [
       %{
         title: "Cadastros",
         url: "#",
+        icon: &square_terminal/1,
+        is_active: true,
         items: [
           %{
-            title: "Minha Unidade",
-            url: "#"
+            title: "Unidade",
+            url: ~p"/units"
           },
           %{
-            title: "Tipos de Unidade",
-            url: "#"
-          }
-        ]
-      },
-      %{
-        title: "Building Your Application",
-        url: "#",
-        items: [
-          %{
-            title: "Routing",
-            url: "#"
+            title: "Tipo de Unidade",
+            url: ~p"/unit_types"
           },
           %{
-            title: "Data Fetching",
-            url: "#",
-            is_active: true
-          },
-          %{
-            title: "Rendering",
-            url: "#"
-          },
-          %{
-            title: "Caching",
-            url: "#"
-          },
-          %{
-            title: "Styling",
-            url: "#"
-          },
-          %{
-            title: "Optimizing",
-            url: "#"
-          },
-          %{
-            title: "Configuring",
-            url: "#"
-          },
-          %{
-            title: "Testing",
-            url: "#"
-          },
-          %{
-            title: "Authentication",
-            url: "#"
-          },
-          %{
-            title: "Deploying",
-            url: "#"
-          },
-          %{
-            title: "Upgrading",
-            url: "#"
-          },
-          %{
-            title: "Examples",
-            url: "#"
-          }
-        ]
-      },
-      %{
-        title: "API Reference",
-        url: "#",
-        items: [
-          %{
-            title: "Components",
-            url: "#"
-          },
-          %{
-            title: "File Conventions",
-            url: "#"
-          },
-          %{
-            title: "Functions",
-            url: "#"
-          },
-          %{
-            title: "next.config.js Options",
-            url: "#"
-          },
-          %{
-            title: "CLI",
-            url: "#"
-          },
-          %{
-            title: "Edge Runtime",
-            url: "#"
-          }
-        ]
-      },
-      %{
-        title: "Architecture",
-        url: "#",
-        items: [
-          %{
-            title: "Accessibility",
-            url: "#"
-          },
-          %{
-            title: "Fast Refresh",
-            url: "#"
-          },
-          %{
-            title: "Next.js Compiler",
-            url: "#"
-          },
-          %{
-            title: "Supported Browsers",
-            url: "#"
-          },
-          %{
-            title: "Turbopack",
-            url: "#"
+            title: "Setting",
+            url: ~p"/users/settings"
           }
         ]
       }
     ]
+  end
+
+  def projects() do
+    [
+      %{
+        name: "Design Engineering",
+        url: "#",
+        icon: "hero-building-office-2"
+      },
+      %{
+        name: "Sales & Marketing",
+        url: "#",
+        icon: "hero-building-office-2"
+      },
+      %{
+        name: "Travel",
+        url: "#",
+        icon: "hero-building-office-2"
+      }
+    ]
+  end
+
+  def sidebar_main(assigns) do
+    ~H"""
+    <.sidebar collapsible="icon" id="main-sidebar">
+      <.sidebar_header>
+        <.team_switcher teams={teams()} />
+      </.sidebar_header>
+      <.sidebar_content>
+        <.nav_main items={nav_main()} />
+      </.sidebar_content>
+      <.sidebar_footer>
+        <.nav_user user={@user} />
+      </.sidebar_footer>
+      <.sidebar_rail />
+    </.sidebar>
+    """
+  end
+
+  def nav_main(assigns) do
+    ~H"""
+    <.sidebar_group>
+      <.sidebar_group_label>
+        Plataforma
+      </.sidebar_group_label>
+      <.sidebar_menu>
+        <.collapsible
+          :for={item <- @items}
+          id={id(item.title)}
+          aschild="aschild"
+          open={item[:is_active]}
+          class="group/collapsible block"
+        >
+          <.sidebar_menu_item>
+            <.as_child tag={&collapsible_trigger/1} child={&sidebar_menu_button/1} tooltip={item.title}>
+              <.dynamic :if={not is_nil(item.icon)} tag={item.icon} />
+              <span>
+                <%= item.title %>
+              </span>
+              <.chevron_right class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            </.as_child>
+
+            <.collapsible_content>
+              <.sidebar_menu_sub>
+                <.sidebar_menu_sub_item :for={sub_item <- item.items}>
+                  <.as_child tag={&sidebar_menu_sub_button/1} child="a" href={sub_item.url}>
+                    <span>
+                      <%= sub_item.title %>
+                    </span>
+                  </.as_child>
+                </.sidebar_menu_sub_item>
+              </.sidebar_menu_sub>
+            </.collapsible_content>
+          </.sidebar_menu_item>
+
+        </.collapsible>
+      </.sidebar_menu>
+    </.sidebar_group>
+    """
+  end
+
+
+  def nav_user(assigns) do
+    ~H"""
+    <.sidebar_menu>
+      <.sidebar_menu_item>
+        <.dropdown_menu class="block">
+          <.as_child tag={&dropdown_menu_trigger/1}
+            child={&sidebar_menu_button/1}
+            size="lg"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          >
+            <.avatar class="h-8 w-8 rounded-lg">
+              <.avatar_image src={@user.avatar} alt={@user.name} />
+              <.avatar_fallback class="rounded-lg">
+                CN
+              </.avatar_fallback>
+            </.avatar>
+            <div class="grid flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold">
+                <%= @user.name %>
+              </span>
+              <span class="truncate text-xs">
+                <%= @user.email %>
+              </span>
+            </div>
+            <.chevrons_up_down class="ml-auto size-4" />
+          </.as_child>
+          <.dropdown_menu_content
+            class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side="right"
+            align="end"
+            sideoffset="{4}"
+          >
+            <.menu>
+              <.menu_label class="p-0 font-normal">
+                <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <.avatar class="h-8 w-8 rounded-lg">
+                    <.avatar_image src="{user.avatar}" alt="{user.name}"></.avatar_image>
+                    <.avatar_fallback class="rounded-lg">
+                      CN
+                    </.avatar_fallback>
+                  </.avatar>
+                  <div class="grid flex-1 text-left text-sm leading-tight">
+                    <span class="truncate font-semibold">
+                      <%= @user.name %>
+                    </span>
+                    <span class="truncate text-xs">
+                      <%= @user.email %>
+                    </span>
+                  </div>
+                </div>
+              </.menu_label>
+              <.menu_separator></.menu_separator>
+              <dropdownmenugroup>
+                <.menu_item>
+                <.link href={~p"/users/settings"} class="hover:text-zinc-700">
+                  <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Dados do Usuário
+                  </.link>
+                </.menu_item>
+              </dropdownmenugroup>
+              <.menu_separator></.menu_separator>
+              <.menu_item>
+              <.link href={~p"/users/log_out"} method="delete" class="hover:text-zinc-700">
+                <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Log out
+                </.link>
+              </.menu_item>
+            </.menu>
+          </.dropdown_menu_content>
+        </.dropdown_menu>
+      </.sidebar_menu_item>
+    </.sidebar_menu>
+    """
+  end
+
+  def team_switcher(assigns) do
+    assigns = assign(assigns, :active_team, hd(assigns.teams))
+
+    ~H"""
+    <.sidebar_menu>
+      <.sidebar_menu_item>
+        <.dropdown_menu class="block">
+          <.as_child tag={&dropdown_menu_trigger/1}
+            child={&sidebar_menu_button/1}
+            size="lg"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          >
+            <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <.dynamic tag={@active_team.logo} class="size-4" />
+            </div>
+            <div class="grid flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold">
+                <%= @active_team.name %>
+              </span>
+              <span class="truncate text-xs">
+                <%= @active_team.plan %>
+              </span>
+            </div>
+            <.chevron_right class="ml-auto" />
+          </.as_child>
+          <.dropdown_menu_content
+            class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            align="start"
+            side="right"
+          >
+            <.menu>
+              <.menu_label class="text-xs text-muted-foreground">
+                Teams
+              </.menu_label>
+
+              <.menu_item :for={{team, index} <- Enum.with_index(@teams)} class="gap-2 p-2">
+                <div class="flex size-6 items-center justify-center rounded-sm border">
+                  <.dynamic tag={team.logo} class="size-4 shrink-0" />
+                </div>
+                <%= team.name %>
+                <.dropdown_menu_shortcut>
+                  ⌘<%= index + 1 %>
+                </.dropdown_menu_shortcut>
+              </.menu_item>
+            </.menu>
+          </.dropdown_menu_content>
+        </.dropdown_menu>
+      </.sidebar_menu_item>
+    </.sidebar_menu>
+    """
   end
 
   def search_form(assigns) do

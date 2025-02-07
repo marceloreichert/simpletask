@@ -10,6 +10,7 @@ defmodule Simpletask.Repo.Migrations.CreateUsersAuthTables do
       add :name, :string, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :utc_datetime
+      add :avatar, :string
 
       timestamps(type: :utc_datetime)
     end

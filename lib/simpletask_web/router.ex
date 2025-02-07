@@ -82,6 +82,8 @@ defmodule SimpletaskWeb.Router do
 
       live "/unit_types/:id", UnitTypeLive.Show, :show
       live "/unit_types/:id/show/edit", UnitTypeLive.Show, :edit
+
+      live "/dashboard", DashboardLive.Index, :index
     end
   end
 

@@ -13,36 +13,12 @@
   </head>
 
 <%= if @current_user do %>
-    <.sidebar_provider>
-      <.sidebar id="main-sidebar">
-        <.sidebar_header>
-          <.version_switcher />
-          <.search_form />
-        </.sidebar_header>
-        <.sidebar_content>
-          <.sidebar_group :for={group <- nav_main()}>
-            <.sidebar_group_label>
-              <%= group.title %>
-            </.sidebar_group_label>
-            <.sidebar_group_content>
-              <.sidebar_menu>
-                <.sidebar_menu_item :for={item <- group.items}>
-                  <.sidebar_menu_button is_active={item[:is_active]}>
-                    <a href={item.url}>
-                      <%= item.title %>
-                    </a>
-                  </.sidebar_menu_button>
-                </.sidebar_menu_item>
-              </.sidebar_menu>
-            </.sidebar_group_content>
-          </.sidebar_group>
-        </.sidebar_content>
-        <.sidebar_rail></.sidebar_rail>
-      </.sidebar>
+   <.sidebar_provider>
+      <.sidebar_main user={@current_user}></.sidebar_main>
       <.sidebar_inset>
         <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <.sidebar_trigger target="main-sidebar" class="-ml-1">
-            <.icon name="hero-exclamation-circle-mini" class="w-4 h-4" />
+            <.icon name="hero-x-mark-solid" class="w-4 h-4" />
           </.sidebar_trigger>
           <.separator orientation="vertical" class="mr-2 h-4"></.separator>
           <.breadcrumb>
@@ -62,77 +38,11 @@
           </.breadcrumb>
         </header>
         <div class="flex flex-1 flex-col gap-4 p-4">
-          <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="aspect-video rounded-xl bg-muted/50"></div>
-            <div class="aspect-video rounded-xl bg-muted/50"></div>
-            <div class="aspect-video rounded-xl bg-muted/50"></div>
+          <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+          {@inner_content}
           </div>
-          <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"></div>
         </div>
       </.sidebar_inset>
     </.sidebar_provider>
 <% end %>
-
-  
-  
-  <body class="bg-white">
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          {@current_user.email}
-        </li>
-        <li>
-          <.link
-            href={~p"/units"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Units
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/unit_types"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            UnitTypes
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
-    {@inner_content}
-  </body>
 </html>

@@ -333,7 +333,7 @@ defmodule SimpletaskWeb.CoreComponents do
   def input_core(%{type: "select"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label_core for={@id}>{@label}</.label_core>
       <select
         id={@id}
         name={@name}
@@ -352,7 +352,7 @@ defmodule SimpletaskWeb.CoreComponents do
   def input_core(%{type: "textarea"} = assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label_core for={@id}>{@label}</.label_core>
       <textarea
         id={@id}
         name={@name}
@@ -372,7 +372,7 @@ defmodule SimpletaskWeb.CoreComponents do
   def input_core(assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label_core for={@id}>{@label}</.label_core>
       <input
         type={@type}
         name={@name}
@@ -393,16 +393,16 @@ defmodule SimpletaskWeb.CoreComponents do
   @doc """
   Renders a label.
   """
-  # attr :for, :string, default: nil
-  # slot :inner_block, required: true
+  attr :for, :string, default: nil
+  slot :inner_block, required: true
 
-  # def label(assigns) do
-  #   ~H"""
-  #   <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
-  #     {render_slot(@inner_block)}
-  #   </label>
-  #   """
-  # end
+  def label_core(assigns) do
+    ~H"""
+    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+      {render_slot(@inner_block)}
+    </label>
+    """
+  end
 
   @doc """
   Generates a generic error message.

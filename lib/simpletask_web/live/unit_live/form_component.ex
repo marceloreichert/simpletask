@@ -20,9 +20,9 @@ defmodule SimpletaskWeb.UnitLive.FormComponent do
         phx-submit="save"
       >
         <.input_core field={@form[:name]} type="text" label="Name" />
-        <.input_core field={@form[:document_cnes]} type="text" label="Document cnes" />
-        <.input_core field={@form[:document_cnpj]} type="text" label="Document cnpj" />
-        <.input_core field={@form[:unit_type]} type="number" label="Unit type" />
+        <.input_core field={@form[:document_cnes]} type="text" label="CNES" />
+        <.input_core field={@form[:document_cnpj]} type="text" label="CNPJ" />
+        <.input_core field={@form[:unit_type_id]} type="text" label="Unit type" />
         <.input_core field={@form[:address]} type="text" label="Address" />
         <.input_core field={@form[:address_number]} type="number" label="Address number" />
         <.input_core field={@form[:address_complement]} type="text" label="Address complement" />

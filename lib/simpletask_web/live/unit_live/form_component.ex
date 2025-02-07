@@ -19,17 +19,17 @@ defmodule SimpletaskWeb.UnitLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:document_cnes]} type="text" label="Document cnes" />
-        <.input field={@form[:document_cnpj]} type="text" label="Document cnpj" />
-        <.input field={@form[:unit_type]} type="number" label="Unit type" />
-        <.input field={@form[:address]} type="text" label="Address" />
-        <.input field={@form[:address_number]} type="number" label="Address number" />
-        <.input field={@form[:address_complement]} type="text" label="Address complement" />
-        <.input field={@form[:address_city]} type="text" label="Address city" />
-        <.input field={@form[:address_uf]} type="text" label="Address uf" />
-        <.input field={@form[:phone]} type="text" label="Phone" />
-        <.input field={@form[:email]} type="text" label="Email" />
+        <.input_core field={@form[:name]} type="text" label="Name" />
+        <.input_core field={@form[:document_cnes]} type="text" label="Document cnes" />
+        <.input_core field={@form[:document_cnpj]} type="text" label="Document cnpj" />
+        <.input_core field={@form[:unit_type]} type="number" label="Unit type" />
+        <.input_core field={@form[:address]} type="text" label="Address" />
+        <.input_core field={@form[:address_number]} type="number" label="Address number" />
+        <.input_core field={@form[:address_complement]} type="text" label="Address complement" />
+        <.input_core field={@form[:address_city]} type="text" label="Address city" />
+        <.input_core field={@form[:address_uf]} type="text" label="Address uf" />
+        <.input_core field={@form[:phone]} type="text" label="Phone" />
+        <.input_core field={@form[:email]} type="text" label="Email" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Unit</.button>
         </:actions>

@@ -18,8 +18,8 @@ defmodule SimpletaskWeb.UserSettingsLive do
           phx-submit="update_email"
           phx-change="validate_email"
         >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
+          <.input_core field={@email_form[:email]} type="email" label="Email" required />
+          <.input_core
             field={@email_form[:current_password]}
             name="current_password"
             id="current_password_for_email"
@@ -49,13 +49,13 @@ defmodule SimpletaskWeb.UserSettingsLive do
             id="hidden_user_email"
             value={@current_email}
           />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
+          <.input_core field={@password_form[:password]} type="password" label="New password" required />
+          <.input_core
             field={@password_form[:password_confirmation]}
             type="password"
             label="Confirm new password"
           />
-          <.input
+          <.input_core
             field={@password_form[:current_password]}
             name="current_password"
             type="password"

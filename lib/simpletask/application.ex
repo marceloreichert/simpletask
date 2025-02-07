@@ -17,7 +17,8 @@ defmodule Simpletask.Application do
       # Start a worker by calling: Simpletask.Worker.start_link(arg)
       # {Simpletask.Worker, arg},
       # Start to serve requests, typically the last entry
-      SimpletaskWeb.Endpoint
+      SimpletaskWeb.Endpoint,
+      TwMerge.Cache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

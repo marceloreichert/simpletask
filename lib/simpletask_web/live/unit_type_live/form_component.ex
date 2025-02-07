@@ -19,7 +19,7 @@ defmodule SimpletaskWeb.UnitTypeLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input_core field={@form[:name]} type="text" label="Name" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Unit type</.button>
         </:actions>

@@ -18,8 +18,8 @@ defmodule SimpletaskWeb.UserResetPasswordLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <.input field={@form[:password]} type="password" label="New password" required />
-        <.input
+        <.input_core field={@form[:password]} type="password" label="New password" required />
+        <.input_core
           field={@form[:password_confirmation]}
           type="password"
           label="Confirm new password"

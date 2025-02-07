@@ -31,9 +31,9 @@ defmodule SimpletaskWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <.input field={@form[:name]} type="text" label="Name" required />
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
+        <.input_core field={@form[:name]} type="text" label="Name" required />
+        <.input_core field={@form[:email]} type="email" label="Email" required />
+        <.input_core field={@form[:password]} type="password" label="Password" required />
 
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>

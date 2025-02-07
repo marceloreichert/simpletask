@@ -15,9 +15,11 @@ defmodule SimpletaskWeb.CoreComponents do
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
   use Phoenix.Component
+  use SaladUI
+
+  import SimpletaskWeb.Gettext
 
   alias Phoenix.LiveView.JS
-  import SimpletaskWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -291,7 +293,7 @@ defmodule SimpletaskWeb.CoreComponents do
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step)
 
-  def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+  def input_core(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
 
     assigns
@@ -299,10 +301,10 @@ defmodule SimpletaskWeb.CoreComponents do
     |> assign(:errors, Enum.map(errors, &translate_error(&1)))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
-    |> input()
+    |> input_core()
   end
 
-  def input(%{type: "checkbox"} = assigns) do
+  def input_core(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
@@ -328,7 +330,7 @@ defmodule SimpletaskWeb.CoreComponents do
     """
   end
 
-  def input(%{type: "select"} = assigns) do
+  def input_core(%{type: "select"} = assigns) do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
@@ -347,7 +349,7 @@ defmodule SimpletaskWeb.CoreComponents do
     """
   end
 
-  def input(%{type: "textarea"} = assigns) do
+  def input_core(%{type: "textarea"} = assigns) do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
@@ -367,7 +369,7 @@ defmodule SimpletaskWeb.CoreComponents do
   end
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
-  def input(assigns) do
+  def input_core(assigns) do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
@@ -391,16 +393,16 @@ defmodule SimpletaskWeb.CoreComponents do
   @doc """
   Renders a label.
   """
-  attr :for, :string, default: nil
-  slot :inner_block, required: true
+  # attr :for, :string, default: nil
+  # slot :inner_block, required: true
 
-  def label(assigns) do
-    ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
-      {render_slot(@inner_block)}
-    </label>
-    """
-  end
+  # def label(assigns) do
+  #   ~H"""
+  #   <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+  #     {render_slot(@inner_block)}
+  #   </label>
+  #   """
+  # end
 
   @doc """
   Generates a generic error message.
@@ -588,14 +590,14 @@ defmodule SimpletaskWeb.CoreComponents do
       <.icon name="hero-x-mark-solid" />
       <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
   """
-  attr :name, :string, required: true
-  attr :class, :string, default: nil
+  # attr :name, :string, required: true
+  # attr :class, :string, default: nil
 
-  def icon(%{name: "hero-" <> _} = assigns) do
-    ~H"""
-    <span class={[@name, @class]} />
-    """
-  end
+  # def icon(%{name: "hero-" <> _} = assigns) do
+  #   ~H"""
+  #   <span class={[@name, @class]} />
+  #   """
+  # end
 
   ## JS Commands
 
@@ -621,30 +623,30 @@ defmodule SimpletaskWeb.CoreComponents do
     )
   end
 
-  def show_modal(js \\ %JS{}, id) when is_binary(id) do
-    js
-    |> JS.show(to: "##{id}")
-    |> JS.show(
-      to: "##{id}-bg",
-      time: 300,
-      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
-    )
-    |> show("##{id}-container")
-    |> JS.add_class("overflow-hidden", to: "body")
-    |> JS.focus_first(to: "##{id}-content")
-  end
+  # def show_modal(js \\ %JS{}, id) when is_binary(id) do
+  #   js
+  #   |> JS.show(to: "##{id}")
+  #   |> JS.show(
+  #     to: "##{id}-bg",
+  #     time: 300,
+  #     transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
+  #   )
+  #   |> show("##{id}-container")
+  #   |> JS.add_class("overflow-hidden", to: "body")
+  #   |> JS.focus_first(to: "##{id}-content")
+  # end
 
-  def hide_modal(js \\ %JS{}, id) do
-    js
-    |> JS.hide(
-      to: "##{id}-bg",
-      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
-    )
-    |> hide("##{id}-container")
-    |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})
-    |> JS.remove_class("overflow-hidden", to: "body")
-    |> JS.pop_focus()
-  end
+  # def hide_modal(js \\ %JS{}, id) do
+  #   js
+  #   |> JS.hide(
+  #     to: "##{id}-bg",
+  #     transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
+  #   )
+  #   |> hide("##{id}-container")
+  #   |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})
+  #   |> JS.remove_class("overflow-hidden", to: "body")
+  #   |> JS.pop_focus()
+  # end
 
   @doc """
   Translates an error message using gettext.

@@ -6,7 +6,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :rooms, Rooms.list_rooms())}
+    {:ok, stream(socket, :rooms, Rooms.list_rooms(socket.assigns.current_user))}
   end
 
   @impl true
@@ -21,9 +21,11 @@ defmodule SimpletaskWeb.RoomLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    user = socket.assigns.current_user
+
     socket
     |> assign(:page_title, "New Room")
-    |> assign(:room, %Room{})
+    |> assign(:room, %Room{user_id: user.id, unit_id: user.unit_id})
   end
 
   defp apply_action(socket, :index, _params) do

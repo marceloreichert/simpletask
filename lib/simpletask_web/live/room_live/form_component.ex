@@ -21,6 +21,7 @@ defmodule SimpletaskWeb.RoomLive.FormComponent do
       >
         <.input_core field={@form[:name]} type="text" label="Name" />
         <.input_core field={@form[:unit_id]} type="text" label="Unit" />
+        <.input_core field={@form[:user_id]} type="text" label="User" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Room</.button>
         </:actions>

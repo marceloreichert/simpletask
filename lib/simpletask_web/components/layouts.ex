@@ -18,14 +18,14 @@ defmodule SimpletaskWeb.Layouts do
   def teams() do
     [
       %{
-        name: "Simpletask",
+        name: "Clinica Amendoim Quasqualho",
         logo: &gallery_vertical_end/1,
-        plan: "Medical"
+        plan: "Clinica Medica"
       }
     ]
   end
 
-  def nav_main() do
+  def nav_menu(user) do
     [
       %{
         title: "Cadastros",
@@ -39,7 +39,7 @@ defmodule SimpletaskWeb.Layouts do
           },
           %{
             title: "Unidade",
-            url: ~p"/units"
+            url: ~p"/units/#{user.unit_id}"
           },
           %{
             title: "Salas",
@@ -77,7 +77,7 @@ defmodule SimpletaskWeb.Layouts do
         <.team_switcher teams={teams()} />
       </.sidebar_header>
       <.sidebar_content>
-        <.nav_main items={nav_main()} />
+        <.nav_main items={nav_menu(@user)} />
       </.sidebar_content>
       <.sidebar_footer>
         <.nav_user user={@user} />

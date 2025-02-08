@@ -17,8 +17,10 @@ defmodule Simpletask.Rooms do
       [%Room{}, ...]
 
   """
-  def list_rooms do
-    Repo.all(Room)
+  def list_rooms(%{unit_id: unit_id} = _user) do
+    Room
+    |> where([t], t.unit_id == ^unit_id)
+    |> Repo.all()
   end
 
   @doc """

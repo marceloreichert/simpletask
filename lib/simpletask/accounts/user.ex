@@ -11,6 +11,8 @@ defmodule Simpletask.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :avatar, :string
 
+    belongs_to :unit, Simpletask.Units.Unit
+
     timestamps(type: :utc_datetime)
   end
 
@@ -39,7 +41,7 @@ defmodule Simpletask.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :name])
+    |> cast(attrs, [:email, :password, :name, :unit_id])
     |> validate_email(opts)
     |> validate_password(opts)
   end

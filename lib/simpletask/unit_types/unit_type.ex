@@ -3,8 +3,7 @@ defmodule Simpletask.UnitTypes.UnitType do
   import Ecto.Changeset
 
   @fields_required [
-    :name,
-    :user_id
+    :name
   ]
 
   @fields_optional []
@@ -13,8 +12,6 @@ defmodule Simpletask.UnitTypes.UnitType do
 
   schema "unit_types" do
     field :name, :string
-
-    belongs_to :user, Simpletask.Accounts.User
 
     timestamps(type: :utc_datetime)
   end

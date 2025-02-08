@@ -24,8 +24,15 @@ unit_type =
     user_id: user.id
   })
 
-Repo.insert!(%Simpletask.Units.Unit{
-  name: "Clínica Amendoim Quasqualho",
-  unit_type_id: unit_type.id,
+unit =
+  Repo.insert!(%Simpletask.Units.Unit{
+    name: "Clínica Amendoim Quasqualho",
+    unit_type_id: unit_type.id,
+    user_id: user.id
+  })
+
+Repo.insert!(%Simpletask.Rooms.Room{
+  name: "Sala de Atendimento 1",
+  unit_id: unit.id,
   user_id: user.id
 })

@@ -41,6 +41,10 @@ defmodule SimpletaskWeb.Layouts do
             title: "Unidade",
             url: ~p"/units"
           },
+          %{
+            title: "Salas",
+            url: ~p"/rooms"
+          },
         ]
       }
     ]

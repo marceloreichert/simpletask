@@ -36,7 +36,7 @@ defmodule Simpletask.ProfessionalsFixtures do
         document_passport_issue_country: "some document_passport_issue_country",
         document_passport_issue_date: ~D[2025-02-08],
         document_passport_number: "some document_passport_number",
-        document_proffesional_type: "some document_proffesional_type",
+        document_professional_type: "some document_professional_type",
         document_professional_number: "some document_professional_number",
         document_professional_uf: "some document_professional_uf",
         email: "some email",

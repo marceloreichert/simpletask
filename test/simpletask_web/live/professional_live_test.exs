@@ -41,7 +41,7 @@ defmodule SimpletaskWeb.ProfessionalLiveTest do
     document_cns: "some document_cns",
     nacionality: "some nacionality",
     social_name: "some social_name",
-    document_proffesional_type: "some document_proffesional_type"
+    document_professional_type: "some document_professional_type"
   }
   @update_attrs %{
     phone_ddd: "some updated phone_ddd",
@@ -80,7 +80,7 @@ defmodule SimpletaskWeb.ProfessionalLiveTest do
     document_cns: "some updated document_cns",
     nacionality: "some updated nacionality",
     social_name: "some updated social_name",
-    document_proffesional_type: "some updated document_proffesional_type"
+    document_professional_type: "some updated document_professional_type"
   }
   @invalid_attrs %{
     phone_ddd: nil,
@@ -119,7 +119,7 @@ defmodule SimpletaskWeb.ProfessionalLiveTest do
     document_cns: nil,
     nacionality: nil,
     social_name: nil,
-    document_proffesional_type: nil
+    document_professional_type: nil
   }
 
   defp create_professional(_) do

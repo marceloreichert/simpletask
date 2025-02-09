@@ -45,7 +45,7 @@ defmodule Simpletask.ProfessionalsTest do
       document_cns: nil,
       nacionality: nil,
       social_name: nil,
-      document_proffesional_type: nil
+      document_professional_type: nil
     }
 
     test "list_professional/0 returns all professional" do
@@ -96,13 +96,13 @@ defmodule Simpletask.ProfessionalsTest do
         document_cns: "some document_cns",
         nacionality: "some nacionality",
         social_name: "some social_name",
-        document_proffesional_type: "some document_proffesional_type"
+        document_professional_type: "some document_professional_type"
       }
 
       assert {:ok, %Professional{} = professional} =
                Professionals.create_professional(valid_attrs)
 
-      assert professional.document_proffesional_type == "some document_proffesional_type"
+      assert professional.document_professional_type == "some document_professional_type"
       assert professional.social_name == "some social_name"
       assert professional.nacionality == "some nacionality"
       assert professional.document_cns == "some document_cns"
@@ -188,13 +188,13 @@ defmodule Simpletask.ProfessionalsTest do
         document_cns: "some updated document_cns",
         nacionality: "some updated nacionality",
         social_name: "some updated social_name",
-        document_proffesional_type: "some updated document_proffesional_type"
+        document_professional_type: "some updated document_professional_type"
       }
 
       assert {:ok, %Professional{} = professional} =
                Professionals.update_professional(professional, update_attrs)
 
-      assert professional.document_proffesional_type == "some updated document_proffesional_type"
+      assert professional.document_professional_type == "some updated document_professional_type"
       assert professional.social_name == "some updated social_name"
       assert professional.nacionality == "some updated nacionality"
       assert professional.document_cns == "some updated document_cns"

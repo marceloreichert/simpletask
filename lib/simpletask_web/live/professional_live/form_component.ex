@@ -80,7 +80,7 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
         />
         <.input_core field={@form[:document_cns]} type="text" label="Document cns" />
         <.input_core
-          field={@form[:document_proffesional_type]}
+          field={@form[:document_professional_type]}
           type="text"
           label="Document proffional type"
         />

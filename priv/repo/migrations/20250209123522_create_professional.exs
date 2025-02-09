@@ -2,7 +2,7 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
   use Ecto.Migration
 
   def change do
-    create table(:professional, primary_key: false) do
+    create table(:professionals, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :name, :string
       add :social_name, :string
@@ -35,7 +35,7 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
       add :document_passport_issue_country, :string
       add :document_passport_expiration_date, :date
       add :document_cns, :string
-      add :document_proffesional_type, :string
+      add :document_professional_type, :string
       add :document_professional_number, :string
       add :document_professional_uf, :string
 
@@ -46,5 +46,7 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
 
       timestamps(type: :utc_datetime)
     end
+
+    create unique_index(:professionals, [:document_cpf])
   end
 end

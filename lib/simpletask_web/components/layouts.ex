@@ -45,6 +45,14 @@ defmodule SimpletaskWeb.Layouts do
             title: "Salas",
             url: ~p"/rooms"
           },
+          %{
+            title: "Especialidades",
+            url: ~p"/specialties"
+          },
+          %{
+            title: "Profissionais de Saúde",
+            url: ~p"/professionals"
+          }
         ]
       }
     ]
@@ -102,10 +110,14 @@ defmodule SimpletaskWeb.Layouts do
           class="group/collapsible block"
         >
           <.sidebar_menu_item>
-            <.as_child tag={&collapsible_trigger/1} child={&sidebar_menu_button/1} tooltip={item.title}>
+            <.as_child
+              tag={&collapsible_trigger/1}
+              child={&sidebar_menu_button/1}
+              tooltip={item.title}
+            >
               <.dynamic :if={not is_nil(item.icon)} tag={item.icon} />
               <span>
-                <%= item.title %>
+                {item.title}
               </span>
               <.chevron_right class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </.as_child>
@@ -115,27 +127,26 @@ defmodule SimpletaskWeb.Layouts do
                 <.sidebar_menu_sub_item :for={sub_item <- item.items}>
                   <.as_child tag={&sidebar_menu_sub_button/1} child="a" href={sub_item.url}>
                     <span>
-                      <%= sub_item.title %>
+                      {sub_item.title}
                     </span>
                   </.as_child>
                 </.sidebar_menu_sub_item>
               </.sidebar_menu_sub>
             </.collapsible_content>
           </.sidebar_menu_item>
-
         </.collapsible>
       </.sidebar_menu>
     </.sidebar_group>
     """
   end
 
-
   def nav_user(assigns) do
     ~H"""
     <.sidebar_menu>
       <.sidebar_menu_item>
         <.dropdown_menu class="block">
-          <.as_child tag={&dropdown_menu_trigger/1}
+          <.as_child
+            tag={&dropdown_menu_trigger/1}
             child={&sidebar_menu_button/1}
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -148,10 +159,10 @@ defmodule SimpletaskWeb.Layouts do
             </.avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-semibold">
-                <%= @user.name %>
+                {@user.name}
               </span>
               <span class="truncate text-xs">
-                <%= @user.email %>
+                {@user.email}
               </span>
             </div>
             <.chevrons_up_down class="ml-auto size-4" />
@@ -173,10 +184,10 @@ defmodule SimpletaskWeb.Layouts do
                   </.avatar>
                   <div class="grid flex-1 text-left text-sm leading-tight">
                     <span class="truncate font-semibold">
-                      <%= @user.name %>
+                      {@user.name}
                     </span>
                     <span class="truncate text-xs">
-                      <%= @user.email %>
+                      {@user.email}
                     </span>
                   </div>
                 </div>
@@ -184,15 +195,15 @@ defmodule SimpletaskWeb.Layouts do
               <.menu_separator></.menu_separator>
               <dropdownmenugroup>
                 <.menu_item>
-                <.link href={~p"/users/settings"} class="hover:text-zinc-700">
-                  <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Dados do Usuário
+                  <.link href={~p"/users/settings"} class="hover:text-zinc-700">
+                    <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Dados do Usuário
                   </.link>
                 </.menu_item>
               </dropdownmenugroup>
               <.menu_separator></.menu_separator>
               <.menu_item>
-              <.link href={~p"/users/log_out"} method="delete" class="hover:text-zinc-700">
-                <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Log out
+                <.link href={~p"/users/log_out"} method="delete" class="hover:text-zinc-700">
+                  <.icon name="hero-x-mark-solid" class="w-4 h-4 mr-2" /> Log out
                 </.link>
               </.menu_item>
             </.menu>
@@ -210,7 +221,8 @@ defmodule SimpletaskWeb.Layouts do
     <.sidebar_menu>
       <.sidebar_menu_item>
         <.dropdown_menu class="block">
-          <.as_child tag={&dropdown_menu_trigger/1}
+          <.as_child
+            tag={&dropdown_menu_trigger/1}
             child={&sidebar_menu_button/1}
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -220,10 +232,10 @@ defmodule SimpletaskWeb.Layouts do
             </div>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-semibold">
-                <%= @active_team.name %>
+                {@active_team.name}
               </span>
               <span class="truncate text-xs">
-                <%= @active_team.plan %>
+                {@active_team.plan}
               </span>
             </div>
             <.chevron_right class="ml-auto" />
@@ -242,9 +254,9 @@ defmodule SimpletaskWeb.Layouts do
                 <div class="flex size-6 items-center justify-center rounded-sm border">
                   <.dynamic tag={team.logo} class="size-4 shrink-0" />
                 </div>
-                <%= team.name %>
+                {team.name}
                 <.dropdown_menu_shortcut>
-                  ⌘<%= index + 1 %>
+                  ⌘{index + 1}
                 </.dropdown_menu_shortcut>
               </.menu_item>
             </.menu>
@@ -290,7 +302,7 @@ defmodule SimpletaskWeb.Layouts do
                   Documentation
                 </span>
                 <span class="">
-                  v<%= hd(versions()) %>
+                  v{hd(versions())}
                 </span>
               </div>
               <.icon name="hero-exclamation-circle-mini" class="ml-auto" />
@@ -299,7 +311,7 @@ defmodule SimpletaskWeb.Layouts do
           <.dropdown_menu_content class="w-full" align="start">
             <.menu>
               <.menu_item :for={item <- versions()}>
-                v<%= item %>
+                v{item}
               </.menu_item>
             </.menu>
           </.dropdown_menu_content>

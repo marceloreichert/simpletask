@@ -1,28 +1,27 @@
-defmodule Simpletask.Rooms.Room do
+defmodule Simpletask.Specialties.Specialty do
   use Simpletask.Schema
 
   import Ecto.Changeset
 
   @fields_required [
     :name,
-    :unit_id,
-    :user_id
+    :description,
+    :cbo_number
   ]
 
   @fields_optional []
 
-  schema "rooms" do
+  schema "specialties" do
     field :name, :string
-
-    belongs_to :unit, Simpletask.Units.Unit
-    belongs_to :user, Simpletask.Accounts.User
+    field :description, :string
+    field :cbo_number, :string
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(room, attrs) do
-    room
+  def changeset(specialty, attrs) do
+    specialty
     |> cast(attrs, @fields_required ++ @fields_optional)
     |> validate_required(@fields_required)
   end

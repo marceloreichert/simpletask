@@ -49,7 +49,12 @@ defmodule SimpletaskWeb.UserSettingsLive do
             id="hidden_user_email"
             value={@current_email}
           />
-          <.input_core field={@password_form[:password]} type="password" label="New password" required />
+          <.input_core
+            field={@password_form[:password]}
+            type="password"
+            label="New password"
+            required
+          />
           <.input_core
             field={@password_form[:password_confirmation]}
             type="password"

@@ -1,0 +1,50 @@
+<.header>
+  Listing Professional
+  <:actions>
+    <.link patch={~p"/professionals/new"}>
+      <.button>New Professional</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="professional"
+  rows={@streams.professional_collection}
+  row_click={fn {_id, professional} -> JS.navigate(~p"/professionals/#{professional}") end}
+>
+  <:col :let={{_id, professional}} label="Name">{professional.name}</:col>
+  <:col :let={{_id, professional}} label="Social name">{professional.social_name}</:col>
+  <:col :let={{_id, professional}} label="Specialty">{professional.specialty.name}</:col>
+  <:col :let={{_id, professional}} label="Email">{professional.email}</:col>
+  <:col :let={{_id, professional}} label="Phone">{professional.phone_ddd} {professional.phone_number}</:col>
+  <:action :let={{_id, professional}}>
+    <div class="sr-only">
+      <.link navigate={~p"/professionals/#{professional}"}>Show</.link>
+    </div>
+    <.link patch={~p"/professionals/#{professional}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, professional}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: professional.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="professional-modal"
+  show
+  on_cancel={JS.patch(~p"/professionals")}
+>
+  <.live_component
+    module={SimpletaskWeb.ProfessionalLive.FormComponent}
+    id={@professional.id || :new}
+    title={@page_title}
+    action={@live_action}
+    professional={@professional}
+    patch={~p"/professionals"}
+  />
+</.modal>

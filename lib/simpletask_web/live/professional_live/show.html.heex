@@ -1,0 +1,68 @@
+<.header>
+  Professional {@professional.id}
+  <:subtitle>This is a professional record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/professionals/#{@professional}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit professional</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@professional.name}</:item>
+  <:item title="Social name">{@professional.social_name}</:item>
+  <:item title="Mothers name">{@professional.mothers_name}</:item>
+  <:item title="Birthday">{@professional.birthday}</:item>
+  <:item title="Nacionality">{@professional.nacionality}</:item>
+  <:item title="Local of birth">{@professional.local_of_birth}</:item>
+  <:item title="Date of naturalization">{@professional.date_of_naturalization}</:item>
+  <:item title="Country of naturalization">{@professional.country_of_naturalization}</:item>
+  <:item title="Document passport number">{@professional.document_passport_number}</:item>
+  <:item title="Document passport issue date">{@professional.document_passport_issue_date}</:item>
+  <:item title="Document passport issue country">
+    {@professional.document_passport_issue_country}
+  </:item>
+  <:item title="Document passport expiration date">
+    {@professional.document_passport_expiration_date}
+  </:item>
+  <:item title="Email">{@professional.email}</:item>
+  <:item title="Phone type">{@professional.phone_type}</:item>
+  <:item title="Phone ddd">{@professional.phone_ddd}</:item>
+  <:item title="Phone number">{@professional.phone_number}</:item>
+  <:item title="Address type">{@professional.address_type}</:item>
+  <:item title="Address description">{@professional.address_description}</:item>
+  <:item title="Address number">{@professional.address_number}</:item>
+  <:item title="Address complement">{@professional.address_complement}</:item>
+  <:item title="Address district">{@professional.address_district}</:item>
+  <:item title="Address city">{@professional.address_city}</:item>
+  <:item title="Address uf">{@professional.address_uf}</:item>
+  <:item title="Address country">{@professional.address_country}</:item>
+  <:item title="Address zip">{@professional.address_zip}</:item>
+  <:item title="Document cpf">{@professional.document_cpf}</:item>
+  <:item title="Document id number">{@professional.document_id_number}</:item>
+  <:item title="Document id uf">{@professional.document_id_uf}</:item>
+  <:item title="Document id issuer">{@professional.document_id_issuer}</:item>
+  <:item title="Document id issue date">{@professional.document_id_issue_date}</:item>
+  <:item title="Document cns">{@professional.document_cns}</:item>
+  <:item title="Document proffional type">{@professional.document_proffesional_type}</:item>
+  <:item title="Document profissional number">{@professional.document_professional_number}</:item>
+  <:item title="Document profissional uf">{@professional.document_professional_uf}</:item>
+</.list>
+
+<.back navigate={~p"/professionals"}>Back to professional</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="professional-modal"
+  show
+  on_cancel={JS.patch(~p"/professionals/#{@professional}")}
+>
+  <.live_component
+    module={SimpletaskWeb.ProfessionalLive.FormComponent}
+    id={@professional.id}
+    title={@page_title}
+    action={@live_action}
+    professional={@professional}
+    patch={~p"/professionals/#{@professional}"}
+  />
+</.modal>

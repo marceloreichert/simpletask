@@ -13,7 +13,7 @@
   </head>
 
   <%= if @current_user do %>
-   <.sidebar_provider>
+    <.sidebar_provider>
       <.sidebar_main user={@current_user}></.sidebar_main>
       <.sidebar_inset>
         <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -39,12 +39,12 @@
         </header>
         <div class="flex flex-1 flex-col gap-4 p-4">
           <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-          {@inner_content}
+            {@inner_content}
           </div>
         </div>
       </.sidebar_inset>
     </.sidebar_provider>
-    <% else %>
+  <% else %>
     {@inner_content}
-<% end %>
+  <% end %>
 </html>

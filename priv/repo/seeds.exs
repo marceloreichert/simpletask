@@ -24,7 +24,7 @@ unit =
 
 unit2 =
   Repo.insert!(%Simpletask.Units.Unit{
-    name: "Clínica de Teste",
+    name: "Clínica de Apoio",
     unit_type_id: unit_type.id
   })
 
@@ -51,7 +51,42 @@ Repo.insert!(%Simpletask.Rooms.Room{
 })
 
 Repo.insert!(%Simpletask.Rooms.Room{
-  name: "Sala da Clinica de Teste",
+  name: "Sala da Clinica de Apoio",
   unit_id: unit2.id,
   user_id: user2.id
+})
+
+specialty1 =
+  Repo.insert!(%Simpletask.Specialties.Specialty{
+    name: "Cardiologista",
+    description:
+      "Os cardiologistas são médicos especializados no diagnóstico, tratamento e prevenção de doenças do coração e do sistema cardiovascular. Eles lidam com uma variedade de condições, incluindo hipertensão, arritmias, insuficiência cardíaca, e doenças coronarianas",
+    cbo_number: "2251-25"
+  })
+
+specialty2 =
+  Repo.insert!(%Simpletask.Specialties.Specialty{
+    name: "Pediatra",
+    cbo_number: "2251-35",
+    description:
+      "Os pediatras são médicos especializados no desenvolvimento, diagnóstico, tratamento e prevenção de doenças em bebês, crianças e adolescentes. Eles acompanham o crescimento e o desenvolvimento dos jovens pacientes, atendendo a suas necessidades físicas, emocionais e sociais."
+  })
+
+specialty3 =
+  Repo.insert!(%Simpletask.Specialties.Specialty{
+    name: "Psicólogo",
+    cbo_number: "2515-05",
+    description: "..."
+  })
+
+Repo.insert!(%Simpletask.Professionals.Professional{
+  name: "Marcelo Reichert",
+  unit_id: unit.id,
+  specialty_id: specialty3.id
+})
+
+Repo.insert!(%Simpletask.Professionals.Professional{
+  name: "Médico da Unit 2",
+  unit_id: unit2.id,
+  specialty_id: specialty2.id
 })

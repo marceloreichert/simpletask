@@ -90,6 +90,20 @@ defmodule SimpletaskWeb.Router do
       live "/rooms/:id", RoomLive.Show, :show
       live "/rooms/:id/show/edit", RoomLive.Show, :edit
 
+      live "/specialties", SpecialtyLive.Index, :index
+      live "/specialties/new", SpecialtyLive.Index, :new
+      live "/specialties/:id/edit", SpecialtyLive.Index, :edit
+
+      live "/specialties/:id", SpecialtyLive.Show, :show
+      live "/specialties/:id/show/edit", SpecialtyLive.Show, :edit
+
+      live "/professionals", ProfessionalLive.Index, :index
+      live "/professionals/new", ProfessionalLive.Index, :new
+      live "/professionals/:id/edit", ProfessionalLive.Index, :edit
+
+      live "/professionals/:id", ProfessionalLive.Show, :show
+      live "/professionals/:id/show/edit", ProfessionalLive.Show, :edit
+
       live "/dashboard", DashboardLive.Index, :index
     end
   end

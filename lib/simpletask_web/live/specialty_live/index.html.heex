@@ -1,0 +1,48 @@
+<.header>
+  Listing Specialties
+  <:actions>
+    <.link patch={~p"/specialties/new"}>
+      <.button>New Specialty</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="specialties"
+  rows={@streams.specialties}
+  row_click={fn {_id, specialty} -> JS.navigate(~p"/specialties/#{specialty}") end}
+>
+  <:col :let={{_id, specialty}} label="Nome">{specialty.name}</:col>
+  <:col :let={{_id, specialty}} label="Descrição">{specialty.description}</:col>
+  <:col :let={{_id, specialty}} label="CBO">{specialty.cbo_number}</:col>
+  <:action :let={{_id, specialty}}>
+    <div class="sr-only">
+      <.link navigate={~p"/specialties/#{specialty}"}>Show</.link>
+    </div>
+    <.link patch={~p"/specialties/#{specialty}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, specialty}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: specialty.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="specialty-modal"
+  show
+  on_cancel={JS.patch(~p"/specialties")}
+>
+  <.live_component
+    module={SimpletaskWeb.SpecialtyLive.FormComponent}
+    id={@specialty.id || :new}
+    title={@page_title}
+    action={@live_action}
+    specialty={@specialty}
+    patch={~p"/specialties"}
+  />
+</.modal>

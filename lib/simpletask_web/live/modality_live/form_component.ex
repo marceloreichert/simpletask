@@ -20,7 +20,6 @@ defmodule SimpletaskWeb.ModalityLive.FormComponent do
         phx-submit="save"
       >
         <.input_core field={@form[:name]} type="text" label="Name" />
-        <.input_core field={@form[:unit_id]} type="text" label="Unit" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Modality</.button>
         </:actions>

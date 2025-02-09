@@ -17,8 +17,10 @@ defmodule Simpletask.Sectors do
       [%Sector{}, ...]
 
   """
-  def list_sectors do
-    Repo.all(Sector)
+  def list_sectors(%{unit_id: unit_id} = _user) do
+    Sector
+    |> where([t], t.unit_id == ^unit_id)
+    |> Repo.all()
   end
 
   @doc """

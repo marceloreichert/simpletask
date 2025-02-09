@@ -52,7 +52,16 @@ defmodule SimpletaskWeb.Layouts do
           %{
             title: "Profissionais de Saúde",
             url: ~p"/professionals"
+          },
+          %{
+            title: "Modalidades",
+            url: ~p"/modalities"
+          },
+          %{
+            title: "Setores",
+            url: ~p"/sectors"
           }
+
         ]
       }
     ]

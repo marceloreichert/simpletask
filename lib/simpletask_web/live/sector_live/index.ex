@@ -6,7 +6,7 @@ defmodule SimpletaskWeb.SectorLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :sectors, Sectors.list_sectors())}
+    {:ok, stream(socket, :sectors, Sectors.list_sectors(socket.assigns.current_user))}
   end
 
   @impl true

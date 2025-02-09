@@ -43,7 +43,6 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
         null: false
 
         add :unit_id, references(:units, on_delete: :delete_all, type: :binary_id), null: false
-        add :sector_id, references(:sectors, on_delete: :delete_all, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime)
     end

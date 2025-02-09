@@ -1,5 +1,5 @@
 defmodule Simpletask.Sectors.Sector do
-  use Ecto.Schema
+  use Simpletask.Schema
   import Ecto.Changeset
 
   @fields_required [

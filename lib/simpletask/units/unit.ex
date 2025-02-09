@@ -4,7 +4,8 @@ defmodule Simpletask.Units.Unit do
 
   @fields_required [
     :name,
-    :unit_type_id
+    :unit_type_id,
+    :modality_id
   ]
 
   @fields_optional [
@@ -34,6 +35,7 @@ defmodule Simpletask.Units.Unit do
     field :email, :string
 
     belongs_to :unit_type, Simpletask.UnitTypes.UnitType
+    belongs_to :modality, Simpletask.Modalities.Modality
 
     timestamps(type: :utc_datetime)
   end

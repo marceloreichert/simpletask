@@ -1,0 +1,42 @@
+<.header>
+  Listing Modalities
+  <:actions>
+    <.link patch={~p"/modalities/new"}>
+      <.button>New Modality</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="modalities"
+  rows={@streams.modalities}
+  row_click={fn {_id, modality} -> JS.navigate(~p"/modalities/#{modality}") end}
+>
+  <:col :let={{_id, modality}} label="Name"><%= modality.name %></:col>
+  <:col :let={{_id, modality}} label="Unit"><%= modality.unit_id %></:col>
+  <:action :let={{_id, modality}}>
+    <div class="sr-only">
+      <.link navigate={~p"/modalities/#{modality}"}>Show</.link>
+    </div>
+    <.link patch={~p"/modalities/#{modality}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, modality}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: modality.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="modality-modal" show on_cancel={JS.patch(~p"/modalities")}>
+  <.live_component
+    module={SimpletaskWeb.ModalityLive.FormComponent}
+    id={@modality.id || :new}
+    title={@page_title}
+    action={@live_action}
+    modality={@modality}
+    patch={~p"/modalities"}
+  />
+</.modal>

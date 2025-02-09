@@ -1,0 +1,42 @@
+<.header>
+  Listing Sectors
+  <:actions>
+    <.link patch={~p"/sectors/new"}>
+      <.button>New Sector</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="sectors"
+  rows={@streams.sectors}
+  row_click={fn {_id, sector} -> JS.navigate(~p"/sectors/#{sector}") end}
+>
+  <:col :let={{_id, sector}} label="Name"><%= sector.name %></:col>
+  <:col :let={{_id, sector}} label="Unit"><%= sector.unit_id %></:col>
+  <:action :let={{_id, sector}}>
+    <div class="sr-only">
+      <.link navigate={~p"/sectors/#{sector}"}>Show</.link>
+    </div>
+    <.link patch={~p"/sectors/#{sector}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, sector}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: sector.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="sector-modal" show on_cancel={JS.patch(~p"/sectors")}>
+  <.live_component
+    module={SimpletaskWeb.SectorLive.FormComponent}
+    id={@sector.id || :new}
+    title={@page_title}
+    action={@live_action}
+    sector={@sector}
+    patch={~p"/sectors"}
+  />
+</.modal>

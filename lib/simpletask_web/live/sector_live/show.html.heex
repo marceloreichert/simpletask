@@ -1,0 +1,27 @@
+<.header>
+  Sector <%= @sector.id %>
+  <:subtitle>This is a sector record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/sectors/#{@sector}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit sector</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @sector.name %></:item>
+  <:item title="Unit"><%= @sector.unit_id %></:item>
+</.list>
+
+<.back navigate={~p"/sectors"}>Back to sectors</.back>
+
+<.modal :if={@live_action == :edit} id="sector-modal" show on_cancel={JS.patch(~p"/sectors/#{@sector}")}>
+  <.live_component
+    module={SimpletaskWeb.SectorLive.FormComponent}
+    id={@sector.id}
+    title={@page_title}
+    action={@live_action}
+    sector={@sector}
+    patch={~p"/sectors/#{@sector}"}
+  />
+</.modal>

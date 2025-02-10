@@ -60,7 +60,8 @@ defmodule Simpletask.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:salad_ui, "~> 0.14"},
-      {:lucide_icons, "~> 2.0"}
+      {:lucide_icons, "~> 2.0"},
+      {:brcpfcnpj, "~> 2.0.0"}
     ]
   end
 

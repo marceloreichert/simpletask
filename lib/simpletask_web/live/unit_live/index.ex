@@ -6,7 +6,7 @@ defmodule SimpletaskWeb.UnitLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :units, Units.list_units())}
+    {:ok, stream(socket, :units, Units.list_units(socket.assigns.current_user))}
   end
 
   @impl true
@@ -21,8 +21,11 @@ defmodule SimpletaskWeb.UnitLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    modality_options = Enum.map(Simpletask.Modalities.list_modalities(), &{&1.name, &1.id})
+
     socket
     |> assign(:page_title, "New Unit")
+    |> assign(:modality_options, modality_options)
     |> assign(:unit, %Unit{})
   end
 

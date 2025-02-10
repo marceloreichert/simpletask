@@ -10,9 +10,12 @@ defmodule SimpletaskWeb.UnitLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    modality_options = Enum.map(Simpletask.Modalities.list_modalities(), &{&1.name, &1.id})
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:modality_options, modality_options)
      |> assign(:unit, Units.get_unit!(id))}
   end
 

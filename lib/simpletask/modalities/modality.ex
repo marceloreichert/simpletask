@@ -2,6 +2,14 @@ defmodule Simpletask.Modalities.Modality do
   use Simpletask.Schema
   import Ecto.Changeset
 
+  @fields_required [
+    :name
+  ]
+
+  @fields_optional []
+
+  @derive {Jason.Encoder, only: [:id, :name]}
+
   schema "modalities" do
     field :name, :string
 
@@ -11,7 +19,7 @@ defmodule Simpletask.Modalities.Modality do
   @doc false
   def changeset(modality, attrs) do
     modality
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, @fields_required ++ @fields_optional)
+    |> validate_required(@fields_required)
   end
 end

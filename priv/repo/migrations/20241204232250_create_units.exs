@@ -15,10 +15,10 @@ defmodule Simpletask.Repo.Migrations.CreateUnits do
       add :phone, :string
       add :email, :string
 
-      add :unit_type_id, references(:unit_types, on_delete: :delete_all, type: :binary_id),
+      add :unit_type_id, references(:unit_types, type: :binary_id),
         null: false
 
-      add :modality_id, references(:modalities, on_delete: :delete_all, type: :binary_id),
+      add :modality_id, references(:modalities, type: :binary_id),
         null: false
 
       timestamps(type: :utc_datetime)

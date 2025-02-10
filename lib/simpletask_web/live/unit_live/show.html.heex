@@ -1,24 +1,21 @@
 <.header>
-  Unit {@unit.id}
-  <:subtitle>This is a unit record from your database.</:subtitle>
+  Unidade {@unit.name}
+  <:subtitle></:subtitle>
   <:actions>
     <.link patch={~p"/units/#{@unit}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit unit</.button>
+      <.button>Editar</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name">{@unit.name}</:item>
-  <:item title="Document cnes">{@unit.document_cnes}</:item>
-  <:item title="Document cnpj">{@unit.document_cnpj}</:item>
-  <:item title="Unit type">{@unit.unit_type.name}</:item>
-  <:item title="Address">{@unit.address}</:item>
-  <:item title="Address number">{@unit.address_number}</:item>
-  <:item title="Address complement">{@unit.address_complement}</:item>
-  <:item title="Address city">{@unit.address_city}</:item>
-  <:item title="Address uf">{@unit.address_uf}</:item>
-  <:item title="Phone">{@unit.phone}</:item>
+  <:item title="Nome">{@unit.name}</:item>
+  <:item title="CNES">{@unit.document_cnes}</:item>
+  <:item title="CNPJ">{Brcpfcnpj.cnpj_format(@unit.document_cnpj)}</:item>
+  <:item title="Modalidade">{@unit.modality.name}</:item>
+  <:item title="Endereço">{@unit.address}, {@unit.address_number} - {@unit.address_complement}</:item>
+  <:item title="Cidade/UF">{@unit.address_city}/{@unit.address_uf}</:item>
+  <:item title="Telefone">{@unit.phone}</:item>
   <:item title="Email">{@unit.email}</:item>
 </.list>
 
@@ -32,5 +29,6 @@
     action={@live_action}
     unit={@unit}
     patch={~p"/units/#{@unit}"}
+    modality_options={@modality_options}
   />
 </.modal>

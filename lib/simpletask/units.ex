@@ -17,10 +17,8 @@ defmodule Simpletask.Units do
       [%Unit{}, ...]
 
   """
-  def list_units do
-    Unit
-    |> Repo.all()
-    |> Repo.preload(:unit_type)
+  def list_units(user) do
+    [get_unit!(user.unit_id)]
   end
 
   @doc """
@@ -37,7 +35,7 @@ defmodule Simpletask.Units do
       ** (Ecto.NoResultsError)
 
   """
-  def get_unit!(id), do: Repo.get!(Unit, id) |> Repo.preload(:unit_type)
+  def get_unit!(id), do: Repo.get!(Unit, id) |> Repo.preload(:unit_type) |> Repo.preload(:modality)
 
   @doc """
   Creates a unit.

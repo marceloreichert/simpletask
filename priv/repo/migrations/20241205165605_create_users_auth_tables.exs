@@ -12,7 +12,7 @@ defmodule Simpletask.Repo.Migrations.CreateUsersAuthTables do
       add :confirmed_at, :utc_datetime
       add :avatar, :string
 
-      add :unit_id, references(:units, on_delete: :delete_all, type: :binary_id), null: false
+      add :unit_id, references(:units, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime)
     end
@@ -21,7 +21,7 @@ defmodule Simpletask.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:users_tokens, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :user_id, references(:users, on_delete: :delete_all, type: :binary_id), null: false
+      add :user_id, references(:users, type: :binary_id), null: false
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string

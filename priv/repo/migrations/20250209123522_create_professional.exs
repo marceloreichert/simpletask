@@ -39,10 +39,9 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
       add :document_professional_number, :string
       add :document_professional_uf, :string
 
-      add :specialty_id, references(:specialties, on_delete: :delete_all, type: :binary_id),
-        null: false
+      add :specialty_id, references(:specialties, type: :binary_id), null: false
 
-        add :unit_id, references(:units, on_delete: :delete_all, type: :binary_id), null: false
+        add :unit_id, references(:units, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime)
     end

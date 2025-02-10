@@ -28,7 +28,7 @@ defmodule SimpletaskWeb.Layouts do
   def nav_menu(user) do
     [
       %{
-        title: "Cadastros",
+        title: "Cadastros Plataforma",
         url: "#",
         icon: &square_terminal/1,
         is_active: true,
@@ -42,16 +42,8 @@ defmodule SimpletaskWeb.Layouts do
             url: ~p"/units/#{user.unit_id}"
           },
           %{
-            title: "Salas",
-            url: ~p"/rooms"
-          },
-          %{
             title: "Especialidades",
             url: ~p"/specialties"
-          },
-          %{
-            title: "Profissionais de Saúde",
-            url: ~p"/professionals"
           },
           %{
             title: "Modalidades",
@@ -62,6 +54,22 @@ defmodule SimpletaskWeb.Layouts do
             url: ~p"/sectors"
           }
 
+        ]
+      },
+      %{
+        title: "Cadastros Unidade",
+        url: "#",
+        icon: &square_terminal/1,
+        is_active: true,
+        items: [
+          %{
+            title: "Salas",
+            url: ~p"/rooms"
+          },
+          %{
+            title: "Profissionais de Saúde",
+            url: ~p"/professionals"
+          },
         ]
       }
     ]

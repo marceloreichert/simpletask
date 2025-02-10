@@ -4,7 +4,6 @@ defmodule Simpletask.Units.Unit do
 
   @fields_required [
     :name,
-    :unit_type_id,
     :modality_id
   ]
 
@@ -20,7 +19,7 @@ defmodule Simpletask.Units.Unit do
     :email
   ]
 
-  @derive {Jason.Encoder, only: [:id, :unit_type] ++ @fields_required ++ @fields_optional}
+  @derive {Jason.Encoder, only: [:id] ++ @fields_required ++ @fields_optional}
 
   schema "units" do
     field :name, :string
@@ -34,7 +33,6 @@ defmodule Simpletask.Units.Unit do
     field :phone, :string
     field :email, :string
 
-    belongs_to :unit_type, Simpletask.UnitTypes.UnitType
     belongs_to :modality, Simpletask.Modalities.Modality
 
     timestamps(type: :utc_datetime)

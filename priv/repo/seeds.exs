@@ -11,28 +11,25 @@
 # and so on) as they will fail if something goes wrong.
 alias Simpletask.Repo
 
-unit_type =
-  Repo.insert!(%Simpletask.UnitTypes.UnitType{
-    name: "Clínica"
-  })
-
-modality =
+modality1 =
   Repo.insert!(%Simpletask.Modalities.Modality{
     name: "Clínica/Ambulatório"
+  })
+modality2 =
+  Repo.insert!(%Simpletask.Modalities.Modality{
+    name: "Hospital"
   })
 
 unit =
   Repo.insert!(%Simpletask.Units.Unit{
     name: "Clínica Amendoim Quasqualho",
-    unit_type_id: unit_type.id,
-    modality_id: modality.id
+    modality_id: modality1.id
   })
 
 unit2 =
   Repo.insert!(%Simpletask.Units.Unit{
     name: "Clínica de Apoio",
-    unit_type_id: unit_type.id,
-    modality_id: modality.id
+    modality_id: modality2.id
   })
 
 {:ok, user} =
@@ -110,11 +107,11 @@ pro2 = Repo.insert!(%Simpletask.Professionals.Professional{
 
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   sector_id: sector1.id,
-  unit_id: unit.id,
+  modality_id: modality1.id,
   professional_id: pro1.id
 })
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   sector_id: sector1.id,
-  unit_id: unit.id,
+  modality_id: modality1.id,
   professional_id: pro1.id
 })

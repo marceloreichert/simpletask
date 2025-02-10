@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.ModalityLive.FormComponent do
   use SimpletaskWeb, :live_component
 
-  alias Simpletask.Modalities
+  alias Simpletask.Queries.ModalityQuery
 
   @impl true
   def render(assigns) do
@@ -9,7 +9,7 @@ defmodule SimpletaskWeb.ModalityLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage modality records in your database.</:subtitle>
+        <:subtitle></:subtitle>
       </.header>
 
       <.simple_form
@@ -19,9 +19,9 @@ defmodule SimpletaskWeb.ModalityLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input_core field={@form[:name]} type="text" label="Name" />
+        <.input_core field={@form[:name]} type="text" label="Nome" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Modality</.button>
+          <.button phx-disable-with="Salvando...">Salvar Modalidade</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -34,28 +34,28 @@ defmodule SimpletaskWeb.ModalityLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign_new(:form, fn ->
-       to_form(Modalities.change_modality(modality))
+       to_form(ModalityQuery.change_modality(modality))
      end)}
   end
 
   @impl true
-  def handle_event("validate", %{"modality" => modality_params}, socket) do
-    changeset = Modalities.change_modality(socket.assigns.modality, modality_params)
+  def handle_event("validate", %{"modality_schema" => modality_params}, socket) do
+    changeset = ModalityQuery.change_modality(socket.assigns.modality, modality_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"modality" => modality_params}, socket) do
+  def handle_event("save", %{"modality_schema" => modality_params}, socket) do
     save_modality(socket, socket.assigns.action, modality_params)
   end
 
   defp save_modality(socket, :edit, modality_params) do
-    case Modalities.update_modality(socket.assigns.modality, modality_params) do
+    case ModalityQuery.update_modality(socket.assigns.modality, modality_params) do
       {:ok, modality} ->
         notify_parent({:saved, modality})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Modality updated successfully")
+         |> put_flash(:info, "Modalidade salva com sucesso")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -64,13 +64,13 @@ defmodule SimpletaskWeb.ModalityLive.FormComponent do
   end
 
   defp save_modality(socket, :new, modality_params) do
-    case Modalities.create_modality(modality_params) do
+    case ModalityQuery.create_modality(modality_params) do
       {:ok, modality} ->
         notify_parent({:saved, modality})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Modality created successfully")
+         |> put_flash(:info, "Modalidade criada com sucesso")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

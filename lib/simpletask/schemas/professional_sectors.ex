@@ -5,7 +5,7 @@ defmodule Simpletask.Schemas.ProfessionalSectorSchema do
 
   @fields_required [
     :name,
-    :unit_id,
+    :modality_id,
     :professional_id,
     :sector_id
   ]
@@ -13,7 +13,7 @@ defmodule Simpletask.Schemas.ProfessionalSectorSchema do
   @fields_optional []
 
   schema "professional_sectors" do
-    belongs_to :unit, Simpletask.Units.Unit
+    belongs_to :modality, Simpletask.Modalities.Modality
     belongs_to :professional, Simpletask.Professionals.Professional
     belongs_to :sector, Simpletask.Sectors.Sector
 

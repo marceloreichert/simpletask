@@ -34,8 +34,8 @@ defmodule SimpletaskWeb.Layouts do
         is_active: true,
         items: [
           %{
-            title: "Tipo de Unidade",
-            url: ~p"/unit_types"
+            title: "Modalidades",
+            url: ~p"/modalities"
           },
           %{
             title: "Unidade",
@@ -45,10 +45,7 @@ defmodule SimpletaskWeb.Layouts do
             title: "Especialidades",
             url: ~p"/specialties"
           },
-          %{
-            title: "Modalidades",
-            url: ~p"/modalities"
-          },
+
           %{
             title: "Setores",
             url: ~p"/sectors"

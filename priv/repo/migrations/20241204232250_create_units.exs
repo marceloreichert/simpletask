@@ -15,9 +15,6 @@ defmodule Simpletask.Repo.Migrations.CreateUnits do
       add :phone, :string
       add :email, :string
 
-      add :unit_type_id, references(:unit_types, type: :binary_id),
-        null: false
-
       add :modality_id, references(:modalities, type: :binary_id),
         null: false
 

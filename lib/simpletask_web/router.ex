@@ -69,19 +69,19 @@ defmodule SimpletaskWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
+      live "/modalities", ModalityLive.Index, :index
+      live "/modalities/new", ModalityLive.Index, :new
+      live "/modalities/:id/edit", ModalityLive.Index, :edit
+
+      live "/modalities/:id", ModalityLive.Show, :show
+      live "/modalities/:id/show/edit", ModalityLive.Show, :edit
+
       live "/units", UnitLive.Index, :index
       live "/units/new", UnitLive.Index, :new
       live "/units/:id/edit", UnitLive.Index, :edit
 
       live "/units/:id", UnitLive.Show, :show
       live "/units/:id/show/edit", UnitLive.Show, :edit
-
-      live "/unit_types", UnitTypeLive.Index, :index
-      live "/unit_types/new", UnitTypeLive.Index, :new
-      live "/unit_types/:id/edit", UnitTypeLive.Index, :edit
-
-      live "/unit_types/:id", UnitTypeLive.Show, :show
-      live "/unit_types/:id/show/edit", UnitTypeLive.Show, :edit
 
       live "/rooms", RoomLive.Index, :index
       live "/rooms/new", RoomLive.Index, :new
@@ -110,13 +110,6 @@ defmodule SimpletaskWeb.Router do
 
       live "/sectors/:id", SectorLive.Show, :show
       live "/sectors/:id/show/edit", SectorLive.Show, :edit
-
-      live "/modalities", ModalityLive.Index, :index
-      live "/modalities/new", ModalityLive.Index, :new
-      live "/modalities/:id/edit", ModalityLive.Index, :edit
-
-      live "/modalities/:id", ModalityLive.Show, :show
-      live "/modalities/:id/show/edit", ModalityLive.Show, :edit
 
       live "/dashboard", DashboardLive.Index, :index
     end

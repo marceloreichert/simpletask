@@ -41,7 +41,7 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
 
       add :specialty_id, references(:specialties, type: :binary_id), null: false
 
-        add :unit_id, references(:units, type: :binary_id), null: false
+      add :unit_id, references(:units, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime)
     end

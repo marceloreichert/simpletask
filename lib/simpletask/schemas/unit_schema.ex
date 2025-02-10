@@ -1,5 +1,6 @@
-defmodule Simpletask.Units.Unit do
+defmodule Simpletask.Schemas.UnitSchema do
   use Simpletask.Schema
+
   import Ecto.Changeset
 
   @fields_required [
@@ -33,7 +34,7 @@ defmodule Simpletask.Units.Unit do
     field :phone, :string
     field :email, :string
 
-    belongs_to :modality, Simpletask.Modalities.Modality
+    belongs_to :modality, Simpletask.Schemas.ModalitySchema
 
     timestamps(type: :utc_datetime)
   end

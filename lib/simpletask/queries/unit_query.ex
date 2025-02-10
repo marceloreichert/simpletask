@@ -1,12 +1,13 @@
-defmodule Simpletask.Units do
+defmodule Simpletask.Queries.UnitQuery do
   @moduledoc """
   The Units context.
   """
 
   import Ecto.Query, warn: false
+
   alias Simpletask.Repo
 
-  alias Simpletask.Units.Unit
+  alias Simpletask.Schemas.UnitSchema
 
   @doc """
   Returns the list of units.
@@ -35,7 +36,7 @@ defmodule Simpletask.Units do
       ** (Ecto.NoResultsError)
 
   """
-  def get_unit!(id), do: Repo.get!(Unit, id) |> Repo.preload(:modality)
+  def get_unit!(id), do: Repo.get!(UnitSchema, id) |> Repo.preload(:modality)
 
   @doc """
   Creates a unit.
@@ -50,8 +51,8 @@ defmodule Simpletask.Units do
 
   """
   def create_unit(attrs \\ %{}) do
-    %Unit{}
-    |> Unit.changeset(attrs)
+    %UnitSchema{}
+    |> UnitSchema.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -67,26 +68,10 @@ defmodule Simpletask.Units do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_unit(%Unit{} = unit, attrs) do
+  def update_unit(%UnitSchema{} = unit, attrs) do
     unit
-    |> Unit.changeset(attrs)
+    |> UnitSchema.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a unit.
-
-  ## Examples
-
-      iex> delete_unit(unit)
-      {:ok, %Unit{}}
-
-      iex> delete_unit(unit)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_unit(%Unit{} = unit) do
-    Repo.delete(unit)
   end
 
   @doc """
@@ -98,7 +83,7 @@ defmodule Simpletask.Units do
       %Ecto.Changeset{data: %Unit{}}
 
   """
-  def change_unit(%Unit{} = unit, attrs \\ %{}) do
-    Unit.changeset(unit, attrs)
+  def change_unit(%UnitSchema{} = unit, attrs \\ %{}) do
+    UnitSchema.changeset(unit, attrs)
   end
 end

@@ -19,7 +19,6 @@
   <:item title="Email">{@unit.email}</:item>
 </.list>
 
-<.back navigate={~p"/units"}>Back to units</.back>
 
 <.modal :if={@live_action == :edit} id="unit-modal" show on_cancel={JS.patch(~p"/units/#{@unit}")}>
   <.live_component

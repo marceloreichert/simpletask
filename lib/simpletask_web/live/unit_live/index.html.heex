@@ -1,8 +1,8 @@
 <.header>
-  Listing Units
+  Listar Unidades
   <:actions>
     <.link patch={~p"/units/new"}>
-      <.button>New Unit</.button>
+      <.button>Nova Unidade</.button>
     </.link>
   </:actions>
 </.header>
@@ -16,9 +16,9 @@
   <:col :let={{_id, unit}} label="Modalidade">{unit.modality.name}</:col>
   <:action :let={{_id, unit}}>
     <div class="sr-only">
-      <.link navigate={~p"/units/#{unit}"}>Show</.link>
+      <.link navigate={~p"/units/#{unit}"}>Ver</.link>
     </div>
-    <.link patch={~p"/units/#{unit}/edit"}>Edit</.link>
+    <.link patch={~p"/units/#{unit}/edit"}>Editar</.link>
   </:action>
 </.table>
 

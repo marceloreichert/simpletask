@@ -1,12 +1,12 @@
 defmodule SimpletaskWeb.SpecialtyLive.Index do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Specialties
-  alias Simpletask.Specialties.Specialty
+  alias Simpletask.Schemas.SpecialtySchema
+  alias Simpletask.Queries.SpecialtyQuery
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :specialties, Specialties.list_specialties())}
+    {:ok, stream(socket, :specialties, SpecialtyQuery.list_specialties())}
   end
 
   @impl true
@@ -17,13 +17,13 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Specialty")
-    |> assign(:specialty, Specialties.get_specialty!(id))
+    |> assign(:specialty, SpecialtyQuery.get_specialty!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Specialty")
-    |> assign(:specialty, %Specialty{})
+    |> assign(:specialty, %SpecialtySchema{})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -39,8 +39,8 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    specialty = Specialties.get_specialty!(id)
-    {:ok, _} = Specialties.delete_specialty(specialty)
+    specialty = SpecialtyQuery.get_specialty!(id)
+    {:ok, _} = SpecialtyQuery.delete_specialty(specialty)
 
     {:noreply, stream_delete(socket, :specialties, specialty)}
   end

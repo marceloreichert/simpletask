@@ -1,4 +1,4 @@
-defmodule Simpletask.Specialties do
+defmodule Simpletask.Queries.SpecialtyQuery do
   @moduledoc """
   The Specialties context.
   """
@@ -6,7 +6,7 @@ defmodule Simpletask.Specialties do
   import Ecto.Query, warn: false
   alias Simpletask.Repo
 
-  alias Simpletask.Specialties.Specialty
+  alias Simpletask.Schemas.SpecialtySchema
 
   @doc """
   Returns the list of specialties.
@@ -18,7 +18,7 @@ defmodule Simpletask.Specialties do
 
   """
   def list_specialties do
-    Repo.all(Specialty)
+    Repo.all(SpecialtySchema)
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule Simpletask.Specialties do
       ** (Ecto.NoResultsError)
 
   """
-  def get_specialty!(id), do: Repo.get!(Specialty, id)
+  def get_specialty!(id), do: Repo.get!(SpecialtySchema, id)
 
   @doc """
   Creates a specialty.
@@ -50,8 +50,8 @@ defmodule Simpletask.Specialties do
 
   """
   def create_specialty(attrs \\ %{}) do
-    %Specialty{}
-    |> Specialty.changeset(attrs)
+    %SpecialtySchema{}
+    |> SpecialtySchema.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -67,9 +67,9 @@ defmodule Simpletask.Specialties do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_specialty(%Specialty{} = specialty, attrs) do
+  def update_specialty(%SpecialtySchema{} = specialty, attrs) do
     specialty
-    |> Specialty.changeset(attrs)
+    |> SpecialtySchema.changeset(attrs)
     |> Repo.update()
   end
 
@@ -85,7 +85,7 @@ defmodule Simpletask.Specialties do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_specialty(%Specialty{} = specialty) do
+  def delete_specialty(%SpecialtySchema{} = specialty) do
     Repo.delete(specialty)
   end
 
@@ -98,7 +98,7 @@ defmodule Simpletask.Specialties do
       %Ecto.Changeset{data: %Specialty{}}
 
   """
-  def change_specialty(%Specialty{} = specialty, attrs \\ %{}) do
-    Specialty.changeset(specialty, attrs)
+  def change_specialty(%SpecialtySchema{} = specialty, attrs \\ %{}) do
+    SpecialtySchema.changeset(specialty, attrs)
   end
 end

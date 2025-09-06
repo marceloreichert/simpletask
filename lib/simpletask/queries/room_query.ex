@@ -1,4 +1,4 @@
-defmodule Simpletask.Rooms do
+defmodule Simpletask.Queries.RoomQuery do
   @moduledoc """
   The Rooms context.
   """
@@ -6,7 +6,7 @@ defmodule Simpletask.Rooms do
   import Ecto.Query, warn: false
   alias Simpletask.Repo
 
-  alias Simpletask.Rooms.Room
+  alias Simpletask.Schemas.RoomSchema
 
   @doc """
   Returns the list of rooms.
@@ -18,7 +18,7 @@ defmodule Simpletask.Rooms do
 
   """
   def list_rooms(%{unit_id: unit_id} = _user) do
-    Room
+    RoomSchema
     |> where([t], t.unit_id == ^unit_id)
     |> Repo.all()
   end
@@ -37,7 +37,7 @@ defmodule Simpletask.Rooms do
       ** (Ecto.NoResultsError)
 
   """
-  def get_room!(id), do: Repo.get!(Room, id)
+  def get_room!(id), do: Repo.get!(RoomSchema, id)
 
   @doc """
   Creates a room.
@@ -52,8 +52,8 @@ defmodule Simpletask.Rooms do
 
   """
   def create_room(attrs \\ %{}) do
-    %Room{}
-    |> Room.changeset(attrs)
+    %RoomSchema{}
+    |> RoomSchema.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,9 +69,9 @@ defmodule Simpletask.Rooms do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_room(%Room{} = room, attrs) do
+  def update_room(%RoomSchema{} = room, attrs) do
     room
-    |> Room.changeset(attrs)
+    |> RoomSchema.changeset(attrs)
     |> Repo.update()
   end
 
@@ -87,7 +87,7 @@ defmodule Simpletask.Rooms do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_room(%Room{} = room) do
+  def delete_room(%RoomSchema{} = room) do
     Repo.delete(room)
   end
 
@@ -100,7 +100,7 @@ defmodule Simpletask.Rooms do
       %Ecto.Changeset{data: %Room{}}
 
   """
-  def change_room(%Room{} = room, attrs \\ %{}) do
-    Room.changeset(room, attrs)
+  def change_room(%RoomSchema{} = room, attrs \\ %{}) do
+    RoomSchema.changeset(room, attrs)
   end
 end

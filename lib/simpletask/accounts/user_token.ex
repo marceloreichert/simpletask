@@ -1,6 +1,8 @@
 defmodule Simpletask.Accounts.UserToken do
   use Simpletask.Schema
+
   import Ecto.Query
+
   alias Simpletask.Accounts.UserToken
 
   @hash_algorithm :sha256

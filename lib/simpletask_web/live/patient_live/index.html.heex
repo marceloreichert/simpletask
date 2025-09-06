@@ -1,0 +1,41 @@
+<.header>
+  Listar Pacientes
+  <:actions>
+    <.link patch={~p"/patients/new"}>
+      <.button>Novo Paciente</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="patient"
+  rows={@streams.patient_collection}
+  row_click={fn {_id, patient} -> JS.navigate(~p"/patients/#{patient}") end}
+>
+  <:col :let={{_id, patient}} label="Name">{patient.name}</:col>
+  <:col :let={{_id, patient}} label="Social name">{patient.social_name}</:col>
+  <:col :let={{_id, patient}} label="Email">{patient.email}</:col>
+  <:col :let={{_id, patient}} label="Phone ddd">{patient.phone_ddd(patient.phone_number)}</:col>
+  <:action :let={{_id, patient}}>
+    <div class="sr-only">
+      <.link navigate={~p"/patients/#{patient}"}>Ver</.link>
+    </div>
+    <.link patch={~p"/patients/#{patient}/edit"}>Editar</.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="patient-modal"
+  show
+  on_cancel={JS.patch(~p"/patients")}
+>
+  <.live_component
+    module={SimpletaskWeb.PatientLive.FormComponent}
+    id={@patient.id || :new}
+    title={@page_title}
+    action={@live_action}
+    patient={@patient}
+    patch={~p"/patients"}
+  />
+</.modal>

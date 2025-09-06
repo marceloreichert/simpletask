@@ -1,8 +1,8 @@
 defmodule SimpletaskWeb.ProfessionalLive.Index do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Professionals
-  alias Simpletask.Professionals.Professional
+  alias Simpletask.Queries.ProfessionalQuery
+  alias Simpletask.Schemas.ProfessionalSchema
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,7 +10,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
      stream(
        socket,
        :professional_collection,
-       Professionals.list_professional(socket.assigns.current_user)
+       ProfessionalQuery.list_professional(socket.assigns.current_user)
      )}
   end
 
@@ -22,7 +22,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Professional")
-    |> assign(:professional, Professionals.get_professional!(id))
+    |> assign(:professional, ProfessionalQuery.get_professional!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -30,7 +30,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
 
     socket
     |> assign(:page_title, "New Professional")
-    |> assign(:professional, %Professional{unit_id: user.unit_id})
+    |> assign(:professional, %ProfessionalSchema{unit_id: user.unit_id})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -46,8 +46,8 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    professional = Professionals.get_professional!(id)
-    {:ok, _} = Professionals.delete_professional(professional)
+    professional = ProfessionalQuery.get_professional!(id)
+    {:ok, _} = ProfessionalQuery.delete_professional(professional)
 
     {:noreply, stream_delete(socket, :professional_collection, professional)}
   end

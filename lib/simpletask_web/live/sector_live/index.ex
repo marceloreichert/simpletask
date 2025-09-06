@@ -1,12 +1,12 @@
 defmodule SimpletaskWeb.SectorLive.Index do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Sectors
-  alias Simpletask.Sectors.Sector
+  alias Simpletask.Schemas.SectorSchema
+  alias Simpletask.Queries.SectorQuery
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :sectors, Sectors.list_sectors(socket.assigns.current_user))}
+    {:ok, stream(socket, :sectors, SectorQuery.list_sectors(socket.assigns.current_user))}
   end
 
   @impl true
@@ -17,13 +17,13 @@ defmodule SimpletaskWeb.SectorLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Sector")
-    |> assign(:sector, Sectors.get_sector!(id))
+    |> assign(:sector, SectorQuery.get_sector!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Sector")
-    |> assign(:sector, %Sector{})
+    |> assign(:sector, %SectorSchema{})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -39,8 +39,8 @@ defmodule SimpletaskWeb.SectorLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    sector = Sectors.get_sector!(id)
-    {:ok, _} = Sectors.delete_sector(sector)
+    sector = SectorQuery.get_sector!(id)
+    {:ok, _} = SectorQuery.delete_sector(sector)
 
     {:noreply, stream_delete(socket, :sectors, sector)}
   end

@@ -45,12 +45,10 @@ defmodule SimpletaskWeb.Layouts do
             title: "Especialidades",
             url: ~p"/specialties"
           },
-
           %{
             title: "Setores",
             url: ~p"/sectors"
           }
-
         ]
       },
       %{
@@ -67,6 +65,10 @@ defmodule SimpletaskWeb.Layouts do
             title: "Profissionais de Saúde",
             url: ~p"/professionals"
           },
+          %{
+            title: "Pacientes",
+            url: ~p"/patients"
+          }
         ]
       }
     ]

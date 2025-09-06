@@ -13,9 +13,9 @@ defmodule Simpletask.Schemas.ProfessionalSectorSchema do
   @fields_optional []
 
   schema "professional_sectors" do
-    belongs_to :modality, Simpletask.Modalities.Modality
-    belongs_to :professional, Simpletask.Professionals.Professional
-    belongs_to :sector, Simpletask.Sectors.Sector
+    belongs_to :modality, Simpletask.Schemas.ModalitySchema
+    belongs_to :professional, Simpletask.Schemas.ProfessionalSchema
+    belongs_to :sector, Simpletask.Schemas.SectorSchema
 
     timestamps(type: :utc_datetime)
   end

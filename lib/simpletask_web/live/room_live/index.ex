@@ -1,12 +1,12 @@
 defmodule SimpletaskWeb.RoomLive.Index do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Rooms
-  alias Simpletask.Rooms.Room
+  alias Simpletask.Queries.RoomQuery
+  alias Simpletask.Schemas.RoomSchema
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :rooms, Rooms.list_rooms(socket.assigns.current_user))}
+    {:ok, stream(socket, :rooms, RoomQuery.list_rooms(socket.assigns.current_user))}
   end
 
   @impl true
@@ -17,7 +17,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Room")
-    |> assign(:room, Rooms.get_room!(id))
+    |> assign(:room, RoomQuery.get_room!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -25,7 +25,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
 
     socket
     |> assign(:page_title, "New Room")
-    |> assign(:room, %Room{user_id: user.id, unit_id: user.unit_id})
+    |> assign(:room, %RoomSchema{user_id: user.id, unit_id: user.unit_id})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -41,8 +41,8 @@ defmodule SimpletaskWeb.RoomLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    room = Rooms.get_room!(id)
-    {:ok, _} = Rooms.delete_room(room)
+    room = RoomQuery.get_room!(id)
+    {:ok, _} = RoomQuery.delete_room(room)
 
     {:noreply, stream_delete(socket, :rooms, room)}
   end

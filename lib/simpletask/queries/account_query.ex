@@ -1,4 +1,4 @@
-defmodule Simpletask.Accounts do
+defmodule Simpletask.Queries.AccountQuery do
   @moduledoc """
   The Accounts context.
   """

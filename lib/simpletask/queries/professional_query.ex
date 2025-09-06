@@ -1,12 +1,13 @@
-defmodule Simpletask.Professionals do
+defmodule Simpletask.Queries.ProfessionalQuery do
   @moduledoc """
   The Professionals context.
   """
 
   import Ecto.Query, warn: false
+
   alias Simpletask.Repo
 
-  alias Simpletask.Professionals.Professional
+  alias Simpletask.Schemas.ProfessionalSchema
 
   @doc """
   Returns the list of professional.
@@ -18,7 +19,7 @@ defmodule Simpletask.Professionals do
 
   """
   def list_professional(%{unit_id: unit_id} = _user) do
-    Professional
+    ProfessionalSchema
     |> where([t], t.unit_id == ^unit_id)
     |> Repo.all()
     |> Repo.preload(:specialty)
@@ -38,7 +39,7 @@ defmodule Simpletask.Professionals do
       ** (Ecto.NoResultsError)
 
   """
-  def get_professional!(id), do: Repo.get!(Professional, id)
+  def get_professional!(id), do: Repo.get!(ProfessionalSchema, id)
 
   @doc """
   Creates a professional.
@@ -53,7 +54,7 @@ defmodule Simpletask.Professionals do
 
   """
   def create_professional(attrs \\ %{}) do
-    %Professional{}
+    %ProfessionalSchema{}
     |> Professional.changeset(attrs)
     |> Repo.insert()
   end
@@ -70,9 +71,9 @@ defmodule Simpletask.Professionals do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_professional(%Professional{} = professional, attrs) do
+  def update_professional(%ProfessionalSchema{} = professional, attrs) do
     professional
-    |> Professional.changeset(attrs)
+    |> ProfessionalSchema.changeset(attrs)
     |> Repo.update()
   end
 
@@ -88,7 +89,7 @@ defmodule Simpletask.Professionals do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_professional(%Professional{} = professional) do
+  def delete_professional(%ProfessionalSchema{} = professional) do
     Repo.delete(professional)
   end
 
@@ -101,7 +102,7 @@ defmodule Simpletask.Professionals do
       %Ecto.Changeset{data: %Professional{}}
 
   """
-  def change_professional(%Professional{} = professional, attrs \\ %{}) do
-    Professional.changeset(professional, attrs)
+  def change_professional(%ProfessionalSchema{} = professional, attrs \\ %{}) do
+    ProfessionalSchema.changeset(professional, attrs)
   end
 end

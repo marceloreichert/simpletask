@@ -1,0 +1,66 @@
+<.header>
+  Paciente {@patient.name}
+  <:subtitle></:subtitle>
+  <:actions>
+    <.link patch={~p"/patients/#{@patient}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Editar paciente</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@patient.name}</:item>
+  <:item title="Social name">{@patient.social_name}</:item>
+  <:item title="Mothers name">{@patient.mothers_name}</:item>
+  <:item title="Birthday">{@patient.birthday}</:item>
+  <:item title="Nacionality">{@patient.nacionality}</:item>
+  <:item title="Local of birth">{@patient.local_of_birth}</:item>
+  <:item title="Date of naturalization">{@patient.date_of_naturalization}</:item>
+  <:item title="Country of naturalization">{@patient.country_of_naturalization}</:item>
+  <:item title="Document passport number">{@patient.document_passport_number}</:item>
+  <:item title="Document passport issue date">{@patient.document_passport_issue_date}</:item>
+  <:item title="Document passport issue country">
+    {@patient.document_passport_issue_country}
+  </:item>
+  <:item title="Document passport expiration date">
+    {@patient.document_passport_expiration_date}
+  </:item>
+  <:item title="Email">{@patient.email}</:item>
+  <:item title="Phone type">{@patient.phone_type}</:item>
+  <:item title="Phone ddd">{@patient.phone_ddd}</:item>
+  <:item title="Phone number">{@patient.phone_number}</:item>
+  <:item title="Address type">{@patient.address_type}</:item>
+  <:item title="Address description">{@patient.address_description}</:item>
+  <:item title="Address number">{@patient.address_number}</:item>
+  <:item title="Address complement">{@patient.address_complement}</:item>
+  <:item title="Address district">{@patient.address_district}</:item>
+  <:item title="Address city">{@patient.address_city}</:item>
+  <:item title="Address uf">{@patient.address_uf}</:item>
+  <:item title="Address country">{@patient.address_country}</:item>
+  <:item title="Address zip">{@patient.address_zip}</:item>
+  <:item title="Document cpf">{@patient.document_cpf}</:item>
+  <:item title="Document id number">{@patient.document_id_number}</:item>
+  <:item title="Document id uf">{@patient.document_id_uf}</:item>
+  <:item title="Document id issuer">{@patient.document_id_issuer}</:item>
+  <:item title="Document id issue date">{@patient.document_id_issue_date}</:item>
+  <:item title="Document cns">{@patient.document_cns}</:item>
+  <:item title="Legal person">{@patient.legal_person}</:item>
+</.list>
+
+<.back navigate={~p"/patients"}>Back to patient</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="patient-modal"
+  show
+  on_cancel={JS.patch(~p"/patients/#{@patient}")}
+>
+  <.live_component
+    module={SimpletaskWeb.PatientLive.FormComponent}
+    id={@patient.id}
+    title={@page_title}
+    action={@live_action}
+    patient={@patient}
+    patch={~p"/patients/#{@patient}"}
+  />
+</.modal>

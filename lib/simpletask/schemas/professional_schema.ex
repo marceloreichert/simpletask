@@ -1,4 +1,4 @@
-defmodule Simpletask.Professionals.Professional do
+defmodule Simpletask.Schemas.ProfessionalSchema do
   use Simpletask.Schema
 
   import Ecto.Changeset
@@ -87,8 +87,8 @@ defmodule Simpletask.Professionals.Professional do
     field :address_zip, :string
     field :phone_ddd, :string
 
-    belongs_to :specialty, Simpletask.Specialties.Specialty
-    belongs_to :unit, Simpletask.Units.Unit
+    belongs_to :specialty, Simpletask.Schemas.SpecialtySchema
+    belongs_to :unit, Simpletask.Schemas.UnitSchema
 
     timestamps(type: :utc_datetime)
   end

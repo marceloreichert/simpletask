@@ -12,22 +12,23 @@
 alias Simpletask.Repo
 
 modality1 =
-  Repo.insert!(%Simpletask.Modalities.Modality{
+  Repo.insert!(%Simpletask.Schemas.ModalitySchema{
     name: "Clínica/Ambulatório"
   })
+
 modality2 =
-  Repo.insert!(%Simpletask.Modalities.Modality{
+  Repo.insert!(%Simpletask.Schemas.ModalitySchema{
     name: "Hospital"
   })
 
 unit =
-  Repo.insert!(%Simpletask.Units.Unit{
+  Repo.insert!(%Simpletask.Schemas.UnitSchema{
     name: "Clínica Amendoim Quasqualho",
     modality_id: modality1.id
   })
 
 unit2 =
-  Repo.insert!(%Simpletask.Units.Unit{
+  Repo.insert!(%Simpletask.Schemas.UnitSchema{
     name: "Clínica de Apoio",
     modality_id: modality2.id
   })
@@ -48,27 +49,31 @@ unit2 =
     unit_id: unit.id
   })
 
-room1 = Repo.insert!(%Simpletask.Rooms.Room{
-  name: "Sala de Atendimento 1",
-  unit_id: unit.id,
-  user_id: user.id
-})
+room1 =
+  Repo.insert!(%Simpletask.Rooms.Room{
+    name: "Sala de Atendimento 1",
+    unit_id: unit.id,
+    user_id: user.id
+  })
 
-room2 = Repo.insert!(%Simpletask.Rooms.Room{
-  name: "Sala da Clinica de Apoio",
-  unit_id: unit2.id,
-  user_id: user2.id
-})
+room2 =
+  Repo.insert!(%Simpletask.Rooms.Room{
+    name: "Sala da Clinica de Apoio",
+    unit_id: unit2.id,
+    user_id: user2.id
+  })
 
-sector1 = Repo.insert!(%Simpletask.Sectors.Sector{
-  name: "Ambulatórios",
-  unit_id: unit.id
-})
+sector1 =
+  Repo.insert!(%Simpletask.Sectors.Sector{
+    name: "Ambulatórios",
+    unit_id: unit.id
+  })
 
-sector2 = Repo.insert!(%Simpletask.Sectors.Sector{
-  name: "Ambulatórios",
-  unit_id: unit2.id
-})
+sector2 =
+  Repo.insert!(%Simpletask.Sectors.Sector{
+    name: "Ambulatórios",
+    unit_id: unit2.id
+  })
 
 specialty1 =
   Repo.insert!(%Simpletask.Specialties.Specialty{
@@ -93,23 +98,26 @@ specialty3 =
     description: "..."
   })
 
-pro1 = Repo.insert!(%Simpletask.Professionals.Professional{
-  name: "Marcelo Reichert",
-  unit_id: unit.id,
-  specialty_id: specialty3.id
-})
+pro1 =
+  Repo.insert!(%Simpletask.Professionals.Professional{
+    name: "Marcelo Reichert",
+    unit_id: unit.id,
+    specialty_id: specialty3.id
+  })
 
-pro2 = Repo.insert!(%Simpletask.Professionals.Professional{
-  name: "Médico da Unit 2",
-  unit_id: unit2.id,
-  specialty_id: specialty2.id
-})
+pro2 =
+  Repo.insert!(%Simpletask.Professionals.Professional{
+    name: "Médico da Unit 2",
+    unit_id: unit2.id,
+    specialty_id: specialty2.id
+  })
 
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   sector_id: sector1.id,
   modality_id: modality1.id,
   professional_id: pro1.id
 })
+
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   sector_id: sector1.id,
   modality_id: modality1.id,

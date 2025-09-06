@@ -1,24 +1,27 @@
-defmodule Simpletask.Sectors.Sector do
+defmodule Simpletask.Schemas.SpecialtySchema do
   use Simpletask.Schema
+
   import Ecto.Changeset
 
   @fields_required [
-    :name, :unit_id
+    :name,
+    :description,
+    :cbo_number
   ]
 
   @fields_optional []
 
-  schema "sectors" do
+  schema "specialties" do
     field :name, :string
-
-    belongs_to :unit, Simpletask.Units.Unit
+    field :description, :string
+    field :cbo_number, :string
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(sector, attrs) do
-    sector
+  def changeset(specialty, attrs) do
+    specialty
     |> cast(attrs, @fields_required ++ @fields_optional)
     |> validate_required(@fields_required)
   end

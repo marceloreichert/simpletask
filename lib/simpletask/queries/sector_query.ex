@@ -1,4 +1,4 @@
-defmodule Simpletask.Sectors do
+defmodule Simpletask.Queries.SectorQuery do
   @moduledoc """
   The Sectors context.
   """
@@ -6,7 +6,7 @@ defmodule Simpletask.Sectors do
   import Ecto.Query, warn: false
   alias Simpletask.Repo
 
-  alias Simpletask.Sectors.Sector
+  alias Simpletask.Schemas.SectorSchema
 
   @doc """
   Returns the list of sectors.
@@ -18,7 +18,7 @@ defmodule Simpletask.Sectors do
 
   """
   def list_sectors(%{unit_id: unit_id} = _user) do
-    Sector
+    SectorSchema
     |> where([t], t.unit_id == ^unit_id)
     |> Repo.all()
   end
@@ -37,7 +37,7 @@ defmodule Simpletask.Sectors do
       ** (Ecto.NoResultsError)
 
   """
-  def get_sector!(id), do: Repo.get!(Sector, id)
+  def get_sector!(id), do: Repo.get!(SectorSchema, id)
 
   @doc """
   Creates a sector.
@@ -52,8 +52,8 @@ defmodule Simpletask.Sectors do
 
   """
   def create_sector(attrs \\ %{}) do
-    %Sector{}
-    |> Sector.changeset(attrs)
+    %SectorSchema{}
+    |> SectorSchema.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,9 +69,9 @@ defmodule Simpletask.Sectors do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_sector(%Sector{} = sector, attrs) do
+  def update_sector(%SectorSchema{} = sector, attrs) do
     sector
-    |> Sector.changeset(attrs)
+    |> SectorSchema.changeset(attrs)
     |> Repo.update()
   end
 
@@ -87,7 +87,7 @@ defmodule Simpletask.Sectors do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_sector(%Sector{} = sector) do
+  def delete_sector(%SectorSchema{} = sector) do
     Repo.delete(sector)
   end
 
@@ -100,7 +100,7 @@ defmodule Simpletask.Sectors do
       %Ecto.Changeset{data: %Sector{}}
 
   """
-  def change_sector(%Sector{} = sector, attrs \\ %{}) do
-    Sector.changeset(sector, attrs)
+  def change_sector(%SectorSchema{} = sector, attrs \\ %{}) do
+    SectorSchema.changeset(sector, attrs)
   end
 end

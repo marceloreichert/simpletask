@@ -1,4 +1,4 @@
-defmodule Simpletask.Rooms.Room do
+defmodule Simpletask.Schemas.RoomSchema do
   use Simpletask.Schema
 
   import Ecto.Changeset

@@ -2,7 +2,7 @@ defmodule SimpletaskWeb.UserAuthTest do
   use SimpletaskWeb.ConnCase, async: true
 
   alias Phoenix.LiveView
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
   alias SimpletaskWeb.UserAuth
   import Simpletask.AccountsFixtures
 

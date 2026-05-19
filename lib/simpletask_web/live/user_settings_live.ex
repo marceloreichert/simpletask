@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.UserSettingsLive do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
 
   def render(assigns) do
     ~H"""

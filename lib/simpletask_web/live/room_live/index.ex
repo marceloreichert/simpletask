@@ -16,7 +16,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Room")
+    |> assign(:page_title, "Editar Sala")
     |> assign(:room, RoomQuery.get_room!(id))
   end
 
@@ -24,13 +24,13 @@ defmodule SimpletaskWeb.RoomLive.Index do
     user = socket.assigns.current_user
 
     socket
-    |> assign(:page_title, "New Room")
+    |> assign(:page_title, "Nova Sala")
     |> assign(:room, %RoomSchema{user_id: user.id, unit_id: user.unit_id})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Rooms")
+    |> assign(:page_title, "Listagem de Salas")
     |> assign(:room, nil)
   end
 

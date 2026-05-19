@@ -12,38 +12,42 @@
     </script>
   </head>
 
+  <.app_navbar current_user={@current_user} />
+
   <%= if @current_user do %>
-    <.sidebar_provider>
-      <.sidebar_main user={@current_user}></.sidebar_main>
-      <.sidebar_inset>
-        <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <.sidebar_trigger target="main-sidebar" class="-ml-1">
-            <.icon name="hero-x-mark-solid" class="w-4 h-4" />
-          </.sidebar_trigger>
-          <.separator orientation="vertical" class="mr-2 h-4"></.separator>
-          <.breadcrumb>
-            <.breadcrumb_list>
-              <.breadcrumb_item class="hidden md:block">
-                <.breadcrumb_link href="#">
-                  Building Your Application
-                </.breadcrumb_link>
-              </.breadcrumb_item>
-              <.breadcrumb_separator class="hidden md:block"></.breadcrumb_separator>
-              <.breadcrumb_item>
-                <.breadcrumb_page>
-                  Data Fetching
-                </.breadcrumb_page>
-              </.breadcrumb_item>
-            </.breadcrumb_list>
-          </.breadcrumb>
-        </header>
-        <div class="flex flex-1 flex-col gap-4 p-4">
-          <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            {@inner_content}
+    <div class="pt-16">
+      <.sidebar_provider>
+        <.sidebar_main user={@current_user}></.sidebar_main>
+        <.sidebar_inset>
+          <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <.sidebar_trigger target="main-sidebar" class="-ml-1">
+              <.icon name="hero-x-mark-solid" class="w-4 h-4" />
+            </.sidebar_trigger>
+            <.separator orientation="vertical" class="mr-2 h-4"></.separator>
+            <.breadcrumb>
+              <.breadcrumb_list>
+                <.breadcrumb_item class="hidden md:block">
+                  <.breadcrumb_link href="#">
+                    Building Your Application
+                  </.breadcrumb_link>
+                </.breadcrumb_item>
+                <.breadcrumb_separator class="hidden md:block"></.breadcrumb_separator>
+                <.breadcrumb_item>
+                  <.breadcrumb_page>
+                    Data Fetching
+                  </.breadcrumb_page>
+                </.breadcrumb_item>
+              </.breadcrumb_list>
+            </.breadcrumb>
+          </header>
+          <div class="flex flex-1 flex-col gap-4 p-4">
+            <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+              {@inner_content}
+            </div>
           </div>
-        </div>
-      </.sidebar_inset>
-    </.sidebar_provider>
+        </.sidebar_inset>
+      </.sidebar_provider>
+    </div>
   <% else %>
     {@inner_content}
   <% end %>

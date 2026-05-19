@@ -9,17 +9,14 @@ defmodule Simpletask.Queries.UnitQuery do
 
   alias Simpletask.Schemas.UnitSchema
 
-  @doc """
-  Returns the list of units.
-
-  ## Examples
-
-      iex> list_units()
-      [%Unit{}, ...]
-
-  """
   def list_units(user) do
-    [get_unit!(user.unit_id)]
+    unit = get_unit!(user.unit_id)
+    [%UnitSchema{id: unit.id, name: unit.name}]
+  end
+
+  def list_units_options(user) do
+    unit = get_unit!(user.unit_id)
+    [{unit.name, unit.id}]
   end
 
   def get_unit!(id), do: Repo.get!(UnitSchema, id) |> Repo.preload(:modality)

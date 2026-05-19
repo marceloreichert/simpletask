@@ -20,7 +20,8 @@ defmodule Simpletask.Schemas.UnitSchema do
     :email
   ]
 
-  @derive {Jason.Encoder, only: [:id] ++ @fields_required ++ @fields_optional}
+  @derive {Jason.Encoder,
+           only: [:id] ++ @fields_required ++ @fields_optional, except: [:__meta__]}
 
   schema "units" do
     field :name, :string

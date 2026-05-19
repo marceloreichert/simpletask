@@ -1,0 +1,54 @@
+<.header>
+  Agendas
+  <:actions>
+    <.link patch={~p"/schedules/new"}>
+      <.button>Nova Agenda</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="schedules"
+  rows={@streams.schedules}
+  row_click={fn {_id, schedule} -> JS.navigate(~p"/schedules/#{schedule}") end}
+>
+  <:col :let={{_id, schedule}} label="Data">{schedule.schedule_date}</:col>
+  <:col :let={{_id, schedule}} label="Início">{schedule.schedule_time_start}</:col>
+  <:col :let={{_id, schedule}} label="Fim">{schedule.schedule_time_end}</:col>
+  <:col :let={{_id, schedule}} label="Profissional">{schedule.professional.name}</:col>
+  <:col :let={{_id, schedule}} label="Especialidade">{schedule.professional.specialty.name}</:col>
+  <:col :let={{_id, schedule}} label="Tempo (min)">{schedule.schedule_consultation_time}</:col>
+  <:action :let={{_id, schedule}}>
+    <div class="sr-only">
+      <.link navigate={~p"/schedules/#{schedule}"}>Mostrar</.link>
+    </div>
+    <.link patch={~p"/schedules/#{schedule}/edit"}>Editar</.link>
+  </:action>
+  <:action :let={{id, schedule}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: schedule.id}) |> hide("##{id}")}
+      data-confirm="Tem certeza?"
+    >
+      Deletar
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="schedule-modal"
+  show
+  on_cancel={JS.patch(~p"/schedules")}
+>
+  <.live_component
+    module={SimpletaskWeb.ScheduleLive.FormComponent}
+    id={@schedule.id || :new}
+    title={@page_title}
+    action={@live_action}
+    schedule={@schedule}
+    current_user={@current_user}
+    professional_options={@professional_options}
+    room_options={@room_options}
+    patch={~p"/schedules"}
+  />
+</.modal>

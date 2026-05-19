@@ -1,0 +1,183 @@
+<.header>
+  Agenda {Calendar.strftime(@schedule.schedule_date, "%d/%m/%Y")} — {@schedule.professional.name}
+  <:subtitle></:subtitle>
+  <:actions>
+    <.link patch={~p"/schedules/#{@schedule}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Editar</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
+  <span class="font-medium text-gray-900">{@schedule.professional.specialty.name}</span>
+  <span class="text-gray-300">·</span>
+  <span>
+    <span class="font-medium text-gray-900">Início:</span>
+    {Calendar.strftime(@schedule.schedule_time_start, "%H:%M")}
+  </span>
+  <span class="text-gray-300">·</span>
+  <span>
+    <span class="font-medium text-gray-900">Fim:</span>
+    {Calendar.strftime(@schedule.schedule_time_end, "%H:%M")}
+  </span>
+  <span class="text-gray-300">·</span>
+  <span>
+    <span class="font-medium text-gray-900">Tempo de consulta:</span>
+    {@schedule.schedule_consultation_time} min
+  </span>
+  <span class="text-gray-300">·</span>
+  <span>
+    <span class="font-medium text-gray-900">Intervalo:</span>
+    {@schedule.schedule_time_between_consultation} min
+  </span>
+</div>
+
+<div class="mt-8">
+  <h3 class="text-base font-semibold text-gray-900 mb-4">Horários de Atendimento</h3>
+  <%= if Enum.empty?(@schedule.schedule_details) do %>
+    <p class="text-sm text-gray-500">Nenhum horário gerado para esta agenda.</p>
+  <% else %>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div
+        :for={detail <- @schedule.schedule_details}
+        class={[
+          "flex flex-col gap-3 rounded-lg border px-4 py-3 shadow-sm",
+          detail.status == "available" && "border-gray-200 bg-white",
+          detail.status == "marked" && "border-green-400 bg-green-100",
+          detail.status == "cancelled" && "border-red-400 bg-red-100"
+        ]}
+      >
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50">
+              <svg class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">
+                {Calendar.strftime(detail.schedule_time, "%H:%M")}
+              </p>
+              <p class="text-xs text-gray-500">
+                <%= case detail.status do %>
+                  <% "available" -> %>Disponível
+                  <% "marked" -> %>
+                    <span class="font-bold text-gray-900">{detail.patient && detail.patient.name}</span>
+                    <br />
+                    <span class="text-xs text-gray-500">{detail.patient && detail.patient.phone_ddd} {detail.patient && detail.patient.phone_number}</span>
+                  <% "cancelled" -> %>Cancelado
+                  <% _ -> %>{detail.status}
+                <% end %>
+              </p>
+            </div>
+          </div>
+          <%= if detail.status == "cancelled" do %>
+            <div class="flex flex-col gap-1">
+              <button
+                phx-click="reopen_detail"
+                phx-value-id={detail.id}
+                data-confirm="Você tem certeza?"
+                class="rounded-md border border-green-400 bg-green-100 px-2 py-1 text-xs font-medium text-green-800 hover:bg-green-200"
+              >
+                Disponibilizar
+              </button>
+            </div>
+          <% end %>
+          <%= if detail.status in ["available", "marked"] do %>
+            <div class="flex flex-col gap-1">
+              <%= if detail.status == "available" do %>
+                <button
+                  phx-click="mark_detail"
+                  phx-value-id={detail.id}
+                  class="rounded-md border border-green-400 bg-green-100 px-2 py-1 text-xs font-medium text-green-800 hover:bg-green-200"
+                >
+                  Marcar
+                </button>
+              <% end %>
+              <%= if detail.status == "marked" do %>
+                <button
+                  phx-click="mark_detail"
+                  phx-value-id={detail.id}
+                  class="rounded-md border border-green-400 bg-green-100 px-2 py-1 text-xs font-medium text-green-800 hover:bg-green-200"
+                >
+                  Remarcar
+                </button>
+              <% end %>
+              <button
+                phx-click="cancel_detail"
+                phx-value-id={detail.id}
+                data-confirm="Você tem certeza?"
+                class="rounded-md bg-red-100 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-200"
+              >
+                Cancelar
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-6">
+  <.back navigate={~p"/schedules"}>Voltar para Agendas</.back>
+</div>
+
+<.modal
+  :if={@marking_detail_id != nil}
+  id="mark-modal"
+  show
+  on_cancel={JS.push("close_mark_modal")}
+>
+  <.header>
+    Marcar Consulta
+    <:subtitle>Selecione o paciente para este horário</:subtitle>
+  </.header>
+  <form phx-submit="confirm_mark" class="mt-4 flex flex-col gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Paciente</label>
+      <select
+        name="patient_id"
+        required
+        class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+      >
+        <option value="">Selecione o paciente...</option>
+        <option :for={{name, id} <- @patient_options} value={id}>{name}</option>
+      </select>
+    </div>
+    <div class="flex justify-end gap-2 mt-2">
+      <button
+        type="button"
+        phx-click="close_mark_modal"
+        class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="rounded-md bg-yellow-400 px-4 py-2 text-sm font-medium text-yellow-900 hover:bg-yellow-300"
+      >
+        Confirmar
+      </button>
+    </div>
+  </form>
+</.modal>
+
+<.modal
+  :if={@live_action == :edit}
+  id="schedule-modal"
+  show
+  on_cancel={JS.patch(~p"/schedules/#{@schedule}")}
+>
+  <.live_component
+    module={SimpletaskWeb.ScheduleLive.FormComponent}
+    id={@schedule.id}
+    title={@page_title}
+    action={@live_action}
+    schedule={@schedule}
+    current_user={@current_user}
+    professional_options={@professional_options}
+    room_options={@room_options}
+    patch={~p"/schedules/#{@schedule}"}
+  />
+</.modal>

@@ -1,7 +1,8 @@
 defmodule SimpletaskWeb.ProfessionalLive.Show do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Professionals
+  alias Simpletask.Queries.ProfessionalQuery
+  alias Simpletask.Queries.UnitQuery
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +14,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:professional, Professionals.get_professional!(id))}
+     |> assign(:professional, ProfessionalQuery.get_professional!(id))}
   end
 
   defp page_title(:show), do: "Show Professional"

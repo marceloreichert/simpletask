@@ -8,6 +8,10 @@ defmodule Simpletask.Queries.SpecialtyQuery do
 
   alias Simpletask.Schemas.SpecialtySchema
 
+  def list_specialty_options() do
+    Enum.map(list_specialties(), fn specialty -> {specialty.name, specialty.id} end)
+  end
+
   @doc """
   Returns the list of specialties.
 

@@ -72,7 +72,7 @@ defmodule SimpletaskWeb.PatientLive.FormComponent do
         <.input_core field={@form[:document_id_number]} type="text" label="Document id number" />
         <.input_core field={@form[:document_id_uf]} type="text" label="Document id uf" />
         <.input_core field={@form[:document_id_issuer]} type="text" label="Document id issuer" />
-        <.input_core field={@form[:unit_id]} type="hidden" label="Document id issuer" />
+        <input type="hidden" name={@form[:unit_id].name} value={@form[:unit_id].value} />
         <.input_core
           field={@form[:document_id_issue_date]}
           type="date"

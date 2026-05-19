@@ -38,6 +38,8 @@ defmodule Simpletask.Repo.Migrations.CreateProfessional do
       add :document_professional_type, :string
       add :document_professional_number, :string
       add :document_professional_uf, :string
+      add :schedule_consultation_time, :integer
+      add :schedule_time_between_consultation, :integer
 
       add :specialty_id, references(:specialties, type: :binary_id), null: false
 

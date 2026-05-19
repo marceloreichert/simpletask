@@ -23,6 +23,13 @@ defmodule Simpletask.Queries.RoomQuery do
     |> Repo.all()
   end
 
+  def list_room_options(%{unit_id: unit_id} = _user) do
+    RoomSchema
+    |> where([r], r.unit_id == ^unit_id)
+    |> Repo.all()
+    |> Enum.map(fn r -> {r.name, r.id} end)
+  end
+
   @doc """
   Gets a single room.
 

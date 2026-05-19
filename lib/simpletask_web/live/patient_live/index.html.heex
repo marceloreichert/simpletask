@@ -15,7 +15,7 @@
   <:col :let={{_id, patient}} label="Name">{patient.name}</:col>
   <:col :let={{_id, patient}} label="Social name">{patient.social_name}</:col>
   <:col :let={{_id, patient}} label="Email">{patient.email}</:col>
-  <:col :let={{_id, patient}} label="Phone ddd">{patient.phone_ddd(patient.phone_number)}</:col>
+  <:col :let={{_id, patient}} label="Telefone">{patient.phone_ddd} {patient.phone_number}</:col>
   <:action :let={{_id, patient}}>
     <div class="sr-only">
       <.link navigate={~p"/patients/#{patient}"}>Ver</.link>

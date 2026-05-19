@@ -1,34 +1,36 @@
 <.header>
-  Listing Professional
+  Listando Profissionais
   <:actions>
     <.link patch={~p"/professionals/new"}>
-      <.button>New Professional</.button>
+      <.button>Novo Profissional</.button>
     </.link>
   </:actions>
 </.header>
 
 <.table
   id="professional"
-  rows={@streams.professional_collection}
+  rows={@streams.professionals}
   row_click={fn {_id, professional} -> JS.navigate(~p"/professionals/#{professional}") end}
 >
-  <:col :let={{_id, professional}} label="Name">{professional.name}</:col>
-  <:col :let={{_id, professional}} label="Social name">{professional.social_name}</:col>
-  <:col :let={{_id, professional}} label="Specialty">{professional.specialty.name}</:col>
-  <:col :let={{_id, professional}} label="Email">{professional.email}</:col>
-  <:col :let={{_id, professional}} label="Phone">{professional.phone_ddd} {professional.phone_number}</:col>
+  <:col :let={{_id, professional}} label="Nome">{professional.name}</:col>
+  <:col :let={{_id, professional}} label="Nome Social">{professional.social_name}</:col>
+  <:col :let={{_id, professional}} label="Especialidade">{professional.specialty.name}</:col>
+  <:col :let={{_id, professional}} label="E-mail">{professional.email}</:col>
+  <:col :let={{_id, professional}} label="Telefone">
+    {professional.phone_ddd} {professional.phone_number}
+  </:col>
   <:action :let={{_id, professional}}>
     <div class="sr-only">
-      <.link navigate={~p"/professionals/#{professional}"}>Show</.link>
+      <.link navigate={~p"/professionals/#{professional}"}>Mostrar</.link>
     </div>
-    <.link patch={~p"/professionals/#{professional}/edit"}>Edit</.link>
+    <.link patch={~p"/professionals/#{professional}/edit"}>Editar</.link>
   </:action>
   <:action :let={{id, professional}}>
     <.link
       phx-click={JS.push("delete", value: %{id: professional.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm="Voce tem certeza?"
     >
-      Delete
+      Deletar
     </.link>
   </:action>
 </.table>
@@ -45,6 +47,8 @@
     title={@page_title}
     action={@live_action}
     professional={@professional}
+    current_user={@current_user}
+    specialty_options={@specialty_options}
     patch={~p"/professionals"}
   />
 </.modal>

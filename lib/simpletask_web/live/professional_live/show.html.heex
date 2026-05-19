@@ -47,6 +47,8 @@
   <:item title="Document proffional type">{@professional.document_professional_type}</:item>
   <:item title="Document profissional number">{@professional.document_professional_number}</:item>
   <:item title="Document profissional uf">{@professional.document_professional_uf}</:item>
+  <:item title="Tempo de consulta (min)">{@professional.schedule_consultation_time}</:item>
+  <:item title="Intervalo entre consultas (min)">{@professional.schedule_time_between_consultation}</:item>
 </.list>
 
 <.back navigate={~p"/professionals"}>Back to professional</.back>
@@ -62,7 +64,7 @@
     id={@professional.id}
     title={@page_title}
     action={@live_action}
-    professional={@professional}
+    unit_collection={@unit_collection}
     patch={~p"/professionals/#{@professional}"}
   />
 </.modal>

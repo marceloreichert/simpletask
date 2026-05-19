@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
   use SimpletaskWeb, :live_component
 
-  alias Simpletask.Professionals
+  alias Simpletask.Queries.ProfessionalQuery
 
   @impl true
   def render(assigns) do
@@ -9,7 +9,7 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
     <div>
       <.header>
         {@title}
-        <:subtitle>Use this form to manage professional records in your database.</:subtitle>
+        <:subtitle></:subtitle>
       </.header>
 
       <.simple_form
@@ -19,13 +19,18 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input_core field={@form[:name]} type="text" label="Name" />
-        <.input_core field={@form[:unit_id]} type="text" label="Unit" />
-        <.input_core field={@form[:social_name]} type="text" label="Social name" />
-        <.input_core field={@form[:mothers_name]} type="text" label="Mothers name" />
-        <.input_core field={@form[:birthday]} type="date" label="Birthday" />
-        <.input_core field={@form[:nacionality]} type="text" label="Nacionality" />
-        <.input_core field={@form[:local_of_birth]} type="text" label="Local of birth" />
+        <.input_core field={@form[:name]} type="text" label="Nome" />
+        <.input_core field={@form[:social_name]} type="text" label="Nome social" />
+        <.input_core
+          field={@form[:specialty_id]}
+          type="select"
+          label="Especialidade"
+          options={@specialty_options}
+        />
+        <.input_core field={@form[:mothers_name]} type="text" label="Nome da mãe" />
+        <.input_core field={@form[:birthday]} type="date" label="Data de nascimento" />
+        <.input_core field={@form[:nacionality]} type="text" label="Nacionalidade" />
+        <.input_core field={@form[:local_of_birth]} type="text" label="Local de nascimento" />
         <.input_core
           field={@form[:date_of_naturalization]}
           type="date"
@@ -94,8 +99,18 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
           type="text"
           label="Document profissional uf"
         />
+        <.input_core
+          field={@form[:schedule_consultation_time]}
+          type="number"
+          label="Tempo de consulta (min)"
+        />
+        <.input_core
+          field={@form[:schedule_time_between_consultation]}
+          type="number"
+          label="Intervalo entre consultas (min)"
+        />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Professional</.button>
+          <.button phx-disable-with="Salvando...">Salvar Dados</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -108,30 +123,30 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign_new(:form, fn ->
-       to_form(Professionals.change_professional(professional))
+       to_form(ProfessionalQuery.change_professional(professional))
      end)}
   end
 
   @impl true
-  def handle_event("validate", %{"professional" => professional_params}, socket) do
+  def handle_event("validate", %{"professional_schema" => professional_params}, socket) do
     changeset =
-      Professionals.change_professional(socket.assigns.professional, professional_params)
+      ProfessionalQuery.change_professional(socket.assigns.professional, professional_params)
 
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"professional" => professional_params}, socket) do
+  def handle_event("save", %{"professional_schema" => professional_params}, socket) do
     save_professional(socket, socket.assigns.action, professional_params)
   end
 
   defp save_professional(socket, :edit, professional_params) do
-    case Professionals.update_professional(socket.assigns.professional, professional_params) do
+    case ProfessionalQuery.update_professional(socket.assigns.professional, professional_params) do
       {:ok, professional} ->
         notify_parent({:saved, professional})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Professional updated successfully")
+         |> put_flash(:info, "Profissional atualizado com sucesso")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -140,13 +155,15 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
   end
 
   defp save_professional(socket, :new, professional_params) do
-    case Professionals.create_professional(professional_params) do
+    params = Map.put(professional_params, :unit_id, socket.assigs.current_user.unit_id)
+
+    case ProfessionalQuery.create_professional(params) do
       {:ok, professional} ->
         notify_parent({:saved, professional})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Professional created successfully")
+         |> put_flash(:info, "Profissional criado com sucesso")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

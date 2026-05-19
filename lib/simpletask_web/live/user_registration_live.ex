@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.UserRegistrationLive do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
   alias Simpletask.Accounts.User
 
   def render(assigns) do

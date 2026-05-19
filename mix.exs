@@ -9,7 +9,8 @@ defmodule Simpletask.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -33,13 +34,13 @@ defmodule Simpletask.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
-      {:phoenix, "~> 1.7.17"},
+      {:phoenix, "~> 1.8"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 1.0.0"},
+      {:phoenix_live_view, "~> 1.1"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
@@ -61,7 +62,8 @@ defmodule Simpletask.MixProject do
       {:bandit, "~> 1.5"},
       {:salad_ui, "~> 0.14"},
       {:lucide_icons, "~> 2.0"},
-      {:brcpfcnpj, "~> 2.0.0"}
+      {:brcpfcnpj, "~> 2.0.0"},
+      {:tidewave, "~> 0.5", only: :dev}
     ]
   end
 

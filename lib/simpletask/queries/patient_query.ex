@@ -23,6 +23,11 @@ defmodule Simpletask.Queries.PatientQuery do
     |> Repo.all()
   end
 
+  def list_patient_options(user) do
+    list_patient(user)
+    |> Enum.map(fn p -> {p.name, p.id} end)
+  end
+
   @doc """
   Gets a single patient.
 

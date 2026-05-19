@@ -1,7 +1,7 @@
 defmodule Simpletask.AccountsTest do
   use Simpletask.DataCase
 
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
 
   import Simpletask.AccountsFixtures
   alias Simpletask.Accounts.{User, UserToken}

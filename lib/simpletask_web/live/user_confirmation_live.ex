@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.UserConfirmationLive do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
 
   def render(%{live_action: :edit} = assigns) do
     ~H"""

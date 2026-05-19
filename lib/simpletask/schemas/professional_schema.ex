@@ -10,6 +10,8 @@ defmodule Simpletask.Schemas.ProfessionalSchema do
   ]
 
   @fields_optional [
+    :schedule_consultation_time,
+    :schedule_time_between_consultation,
     :social_name,
     :mothers_name,
     :birthday,
@@ -45,7 +47,12 @@ defmodule Simpletask.Schemas.ProfessionalSchema do
     :document_professional_uf
   ]
 
+  @derive {Jason.Encoder, only: [:id] ++ @fields_required ++ @fields_optional}
+
   schema "professionals" do
+    field :schedule_consultation_time, :integer
+    field :schedule_time_between_consultation, :integer
+
     field :social_name, :string
     field :nacionality, :string
 

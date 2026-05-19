@@ -1,7 +1,7 @@
 defmodule SimpletaskWeb.RoomLive.Show do
   use SimpletaskWeb, :live_view
 
-  alias Simpletask.Rooms
+  alias Simpletask.Queries.RoomQuery
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +13,7 @@ defmodule SimpletaskWeb.RoomLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:room, Rooms.get_room!(id))}
+     |> assign(:room, RoomQuery.get_room!(id))}
   end
 
   defp page_title(:show), do: "Show Room"

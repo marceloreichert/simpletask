@@ -4,7 +4,7 @@ defmodule SimpletaskWeb.UserResetPasswordLiveTest do
   import Phoenix.LiveViewTest
   import Simpletask.AccountsFixtures
 
-  alias Simpletask.Accounts
+  alias Simpletask.Queries.AccountQuery, as: Accounts
 
   setup do
     user = user_fixture()

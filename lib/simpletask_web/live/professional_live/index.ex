@@ -2,16 +2,17 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
   use SimpletaskWeb, :live_view
 
   alias Simpletask.Queries.ProfessionalQuery
+  alias Simpletask.Queries.SpecialtyQuery
+
   alias Simpletask.Schemas.ProfessionalSchema
 
   @impl true
   def mount(_params, _session, socket) do
+    professionals = ProfessionalQuery.list_professionals(socket.assigns.current_user)
+
     {:ok,
-     stream(
-       socket,
-       :professional_collection,
-       ProfessionalQuery.list_professional(socket.assigns.current_user)
-     )}
+     stream(socket, :professionals, professionals)
+     |> assign(:specialty_options, SpecialtyQuery.list_specialty_options())}
   end
 
   @impl true
@@ -21,27 +22,25 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Professional")
+    |> assign(:page_title, "Editar Dados do Profissional")
     |> assign(:professional, ProfessionalQuery.get_professional!(id))
   end
 
   defp apply_action(socket, :new, _params) do
-    user = socket.assigns.current_user
-
     socket
-    |> assign(:page_title, "New Professional")
-    |> assign(:professional, %ProfessionalSchema{unit_id: user.unit_id})
+    |> assign(:page_title, "Novo Profissional")
+    |> assign(:professional, %ProfessionalSchema{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Professional")
-    |> assign(:professional, nil)
+    |> assign(:page_title, "Lista de Profissionais")
+    |> assign(:professionals, nil)
   end
 
   @impl true
   def handle_info({SimpletaskWeb.ProfessionalLive.FormComponent, {:saved, professional}}, socket) do
-    {:noreply, stream_insert(socket, :professional_collection, professional)}
+    {:noreply, stream_insert(socket, :professionals, professional)}
   end
 
   @impl true
@@ -49,6 +48,6 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
     professional = ProfessionalQuery.get_professional!(id)
     {:ok, _} = ProfessionalQuery.delete_professional(professional)
 
-    {:noreply, stream_delete(socket, :professional_collection, professional)}
+    {:noreply, stream_delete(socket, :professionals, professional)}
   end
 end

@@ -1,8 +1,8 @@
 <.header>
-  Listing Specialties
+  Lista de Especialidades
   <:actions>
     <.link patch={~p"/specialties/new"}>
-      <.button>New Specialty</.button>
+      <.button>Nova Especialidade</.button>
     </.link>
   </:actions>
 </.header>
@@ -17,16 +17,16 @@
   <:col :let={{_id, specialty}} label="CBO">{specialty.cbo_number}</:col>
   <:action :let={{_id, specialty}}>
     <div class="sr-only">
-      <.link navigate={~p"/specialties/#{specialty}"}>Show</.link>
+      <.link navigate={~p"/specialties/#{specialty}"}>Detalhes</.link>
     </div>
-    <.link patch={~p"/specialties/#{specialty}/edit"}>Edit</.link>
+    <.link patch={~p"/specialties/#{specialty}/edit"}>Editar</.link>
   </:action>
   <:action :let={{id, specialty}}>
     <.link
       phx-click={JS.push("delete", value: %{id: specialty.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >
-      Delete
+      Deletar
     </.link>
   </:action>
 </.table>
@@ -43,6 +43,7 @@
     title={@page_title}
     action={@live_action}
     specialty={@specialty}
+    current_user={@current_user}
     patch={~p"/specialties"}
   />
 </.modal>

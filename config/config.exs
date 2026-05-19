@@ -9,7 +9,11 @@ import Config
 
 config :simpletask,
   ecto_repos: [Simpletask.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime, binary_id: true]
+
+config :simpletask, Simpletask.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id]
 
 # Configures the endpoint
 config :simpletask, SimpletaskWeb.Endpoint,

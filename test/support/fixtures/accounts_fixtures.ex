@@ -18,7 +18,7 @@ defmodule Simpletask.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> Simpletask.Accounts.register_user()
+      |> Simpletask.Queries.AccountQuery.register_user()
 
     user
   end

@@ -16,19 +16,19 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Specialty")
+    |> assign(:page_title, "Editar Especialidade")
     |> assign(:specialty, SpecialtyQuery.get_specialty!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Specialty")
+    |> assign(:page_title, "Nova Especialidade")
     |> assign(:specialty, %SpecialtySchema{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Specialties")
+    |> assign(:page_title, "Lista de Especialidades")
     |> assign(:specialty, nil)
   end
 

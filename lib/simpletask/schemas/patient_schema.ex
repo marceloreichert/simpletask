@@ -4,11 +4,13 @@ defmodule Simpletask.Schemas.PatientSchema do
 
   @fields_required [
     :name,
-    :social_name,
+    :phone_ddd,
+    :phone_number,
     :unit_id
   ]
 
   @fields_optional [
+    :social_name,
     :mothers_name,
     :birthday,
     :nacionality,
@@ -21,8 +23,6 @@ defmodule Simpletask.Schemas.PatientSchema do
     :document_passport_expiration_date,
     :email,
     :phone_type,
-    :phone_ddd,
-    :phone_number,
     :address_type,
     :address_description,
     :address_number,

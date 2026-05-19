@@ -25,6 +25,12 @@ defmodule SimpletaskWeb.Layouts do
     ]
   end
 
+  def nav_links() do
+    [
+      %{title: "Agenda de Hoje", url: ~p"/dashboard", icon: &calendar/1}
+    ]
+  end
+
   def nav_menu(user) do
     [
       %{
@@ -48,6 +54,10 @@ defmodule SimpletaskWeb.Layouts do
           %{
             title: "Setores",
             url: ~p"/sectors"
+          },
+          %{
+            title: "Agendas",
+            url: ~p"/schedules"
           }
         ]
       },
@@ -94,6 +104,71 @@ defmodule SimpletaskWeb.Layouts do
     ]
   end
 
+  def app_navbar(assigns) do
+    ~H"""
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+      <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-sm">ST</span>
+            </div>
+            <span class="font-semibold text-gray-900 text-lg">SimpleTask</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <%= if @current_user do %>
+              <span class="hidden sm:block text-sm text-gray-500">{@current_user.email}</span>
+              <.link
+                href={~p"/users/settings"}
+                class="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Configurações
+              </.link>
+              <.link
+                href={~p"/users/log_out"}
+                method="delete"
+                class="text-sm font-medium text-white bg-slate-900 px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                Sair
+              </.link>
+            <% else %>
+              <.link
+                href={~p"/users/log_in"}
+                class="text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Entrar
+              </.link>
+              <.link
+                href={~p"/users/register"}
+                class="text-sm font-medium text-white bg-slate-900 px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                Começar agora
+              </.link>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+    """
+  end
+
+  def nav_links_menu(assigns) do
+    ~H"""
+    <.sidebar_group>
+      <.sidebar_group_label>Geral</.sidebar_group_label>
+      <.sidebar_menu>
+        <.sidebar_menu_item :for={item <- @items}>
+          <.as_child tag={&sidebar_menu_button/1} child="a" href={item.url} tooltip={item.title}>
+            <.dynamic :if={not is_nil(item[:icon])} tag={item.icon} />
+            <span>{item.title}</span>
+          </.as_child>
+        </.sidebar_menu_item>
+      </.sidebar_menu>
+    </.sidebar_group>
+    """
+  end
+
   def sidebar_main(assigns) do
     ~H"""
     <.sidebar collapsible="icon" id="main-sidebar">
@@ -114,9 +189,18 @@ defmodule SimpletaskWeb.Layouts do
   def nav_main(assigns) do
     ~H"""
     <.sidebar_group>
-      <.sidebar_group_label>
-        Plataforma
-      </.sidebar_group_label>
+      <.sidebar_group_label>Geral</.sidebar_group_label>
+      <.sidebar_menu>
+        <.sidebar_menu_item :for={item <- nav_links()}>
+          <.as_child tag={&sidebar_menu_button/1} child="a" href={item.url} tooltip={item.title}>
+            <.dynamic :if={not is_nil(item[:icon])} tag={item.icon} />
+            <span>{item.title}</span>
+          </.as_child>
+        </.sidebar_menu_item>
+      </.sidebar_menu>
+    </.sidebar_group>
+    <.sidebar_group>
+      <.sidebar_group_label>Plataforma</.sidebar_group_label>
       <.sidebar_menu>
         <.collapsible
           :for={item <- @items}
@@ -132,19 +216,14 @@ defmodule SimpletaskWeb.Layouts do
               tooltip={item.title}
             >
               <.dynamic :if={not is_nil(item.icon)} tag={item.icon} />
-              <span>
-                {item.title}
-              </span>
+              <span>{item.title}</span>
               <.chevron_right class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </.as_child>
-
             <.collapsible_content>
               <.sidebar_menu_sub>
                 <.sidebar_menu_sub_item :for={sub_item <- item.items}>
                   <.as_child tag={&sidebar_menu_sub_button/1} child="a" href={sub_item.url}>
-                    <span>
-                      {sub_item.title}
-                    </span>
+                    <span>{sub_item.title}</span>
                   </.as_child>
                 </.sidebar_menu_sub_item>
               </.sidebar_menu_sub>

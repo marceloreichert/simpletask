@@ -1,0 +1,43 @@
+<.header>
+  Convênios
+  <:actions>
+    <.link patch={~p"/health_insurances/new"}>
+      <.button>Novo Convênio</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="health_insurances"
+  rows={@streams.health_insurances}
+  row_click={fn {_id, hi} -> JS.navigate(~p"/health_insurances/#{hi}") end}
+>
+  <:col :let={{_id, hi}} label="Nome">{hi.name}</:col>
+  <:action :let={{_id, hi}}>
+    <.link patch={~p"/health_insurances/#{hi}/edit"}>Editar</.link>
+  </:action>
+  <:action :let={{id, hi}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: hi.id}) |> hide("##{id}")}
+      data-confirm="Tem certeza?"
+    >
+      Deletar
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="health-insurance-modal"
+  show
+  on_cancel={JS.patch(~p"/health_insurances")}
+>
+  <.live_component
+    module={SimpletaskWeb.HealthInsuranceLive.FormComponent}
+    id={@health_insurance.id || :new}
+    title={@page_title}
+    action={@live_action}
+    health_insurance={@health_insurance}
+    patch={~p"/health_insurances"}
+  />
+</.modal>

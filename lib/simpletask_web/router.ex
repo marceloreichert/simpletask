@@ -111,7 +111,14 @@ defmodule SimpletaskWeb.Router do
       live "/sectors/:id", SectorLive.Show, :show
       live "/sectors/:id/show/edit", SectorLive.Show, :edit
 
+      live "/health_insurances", HealthInsuranceLive.Index, :index
+      live "/health_insurances/new", HealthInsuranceLive.Index, :new
+      live "/health_insurances/:id/edit", HealthInsuranceLive.Index, :edit
+
+      live "/schedules/my", ScheduleLive.MySchedule, :index
+      live "/schedules/:id/my", ScheduleLive.MyScheduleShow, :show
       live "/schedules/today", ScheduleLive.Today, :index
+      live "/schedules/specialty", ScheduleLive.Specialty, :index
       live "/schedules", ScheduleLive.Index, :index
       live "/schedules/new", ScheduleLive.Index, :new
       live "/schedules/:id/edit", ScheduleLive.Index, :edit

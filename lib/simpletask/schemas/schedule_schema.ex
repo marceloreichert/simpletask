@@ -9,11 +9,20 @@ defmodule Simpletask.Schemas.ScheduleSchema do
     :schedule_time_end,
     :schedule_consultation_time,
     :schedule_time_between_consultation,
+    :schedule_type,
     :professional_id,
     :room_id
   ]
 
-  @fields_optional []
+  @fields_optional [:health_insurance_id]
+
+  @valid_types ~w(health_insurance unique)
+
+  @type_labels %{"health_insurance" => "Convênio", "unique" => "Única"}
+
+  def schedule_type_options do
+    Enum.map(@valid_types, &{@type_labels[&1], &1})
+  end
 
   schema "schedules" do
     field :schedule_date, :date
@@ -21,9 +30,11 @@ defmodule Simpletask.Schemas.ScheduleSchema do
     field :schedule_time_end, :time
     field :schedule_consultation_time, :integer
     field :schedule_time_between_consultation, :integer
+    field :schedule_type, :string
 
     belongs_to :professional, Simpletask.Schemas.ProfessionalSchema
     belongs_to :room, Simpletask.Schemas.RoomSchema
+    belongs_to :health_insurance, Simpletask.Schemas.HealthInsuranceSchema
 
     has_many :schedule_details, Simpletask.Schemas.ScheduleDetailSchema, foreign_key: :schedule_id
 
@@ -35,5 +46,14 @@ defmodule Simpletask.Schemas.ScheduleSchema do
     schedule
     |> cast(attrs, @fields_required ++ @fields_optional)
     |> validate_required(@fields_required)
+    |> validate_inclusion(:schedule_type, @valid_types)
+    |> validate_health_insurance()
+  end
+
+  defp validate_health_insurance(changeset) do
+    case get_field(changeset, :schedule_type) do
+      "health_insurance" -> validate_required(changeset, [:health_insurance_id])
+      _ -> changeset
+    end
   end
 end

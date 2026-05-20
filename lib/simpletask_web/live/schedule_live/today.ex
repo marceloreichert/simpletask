@@ -9,7 +9,11 @@ defmodule SimpletaskWeb.ScheduleLive.Today do
       ScheduleQuery.list_schedules_with_available_today(socket.assigns.current_user)
       |> Enum.group_by(& &1.professional_id)
       |> Enum.map(fn {_id, schedules} ->
-        {hd(schedules).professional, schedules}
+        sorted = Enum.sort_by(schedules, & &1.schedule_date, Date)
+        {hd(sorted).professional, sorted}
+      end)
+      |> Enum.sort_by(fn {prof, schedules} ->
+        {hd(schedules).schedule_date, prof.name}
       end)
 
     {:ok,

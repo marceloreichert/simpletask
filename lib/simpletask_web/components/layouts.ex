@@ -27,7 +27,16 @@ defmodule SimpletaskWeb.Layouts do
 
   def nav_links() do
     [
-      %{title: "Agenda de Hoje", url: ~p"/dashboard", icon: &calendar/1}
+      %{title: "Agendas do Dia", url: ~p"/dashboard", icon: &calendar/1},
+      %{title: "Agendas por Médicos", url: ~p"/schedules/today", icon: &calendar_days/1},
+      %{title: "Agendas por Especialidade", url: ~p"/schedules/specialty", icon: &stethoscope/1},
+      %{title: "Agendas", url: ~p"/schedules", icon: &calendar_range/1}
+    ]
+  end
+
+  def nav_attended_links() do
+    [
+      %{title: "Minha Agenda", url: ~p"/schedules/my", icon: &user_round/1}
     ]
   end
 
@@ -52,25 +61,25 @@ defmodule SimpletaskWeb.Layouts do
             url: ~p"/specialties"
           },
           %{
-            title: "Setores",
-            url: ~p"/sectors"
+            title: "Convênios",
+            url: ~p"/health_insurances"
           },
-          %{
-            title: "Agendas",
-            url: ~p"/schedules"
-          }
-        ]
-      },
-      %{
-        title: "Cadastros Unidade",
-        url: "#",
-        icon: &square_terminal/1,
-        is_active: true,
-        items: [
           %{
             title: "Salas",
             url: ~p"/rooms"
           },
+          %{
+            title: "Setores",
+            url: ~p"/sectors"
+          }
+        ]
+      },
+      %{
+        title: "Cadastros Pessoas",
+        url: "#",
+        icon: &square_terminal/1,
+        is_active: true,
+        items: [
           %{
             title: "Profissionais de Saúde",
             url: ~p"/professionals"
@@ -189,9 +198,20 @@ defmodule SimpletaskWeb.Layouts do
   def nav_main(assigns) do
     ~H"""
     <.sidebar_group>
-      <.sidebar_group_label>Geral</.sidebar_group_label>
+      <.sidebar_group_label>Agendamentos</.sidebar_group_label>
       <.sidebar_menu>
         <.sidebar_menu_item :for={item <- nav_links()}>
+          <.as_child tag={&sidebar_menu_button/1} child="a" href={item.url} tooltip={item.title}>
+            <.dynamic :if={not is_nil(item[:icon])} tag={item.icon} />
+            <span>{item.title}</span>
+          </.as_child>
+        </.sidebar_menu_item>
+      </.sidebar_menu>
+    </.sidebar_group>
+    <.sidebar_group>
+      <.sidebar_group_label>Atendimento</.sidebar_group_label>
+      <.sidebar_menu>
+        <.sidebar_menu_item :for={item <- nav_attended_links()}>
           <.as_child tag={&sidebar_menu_button/1} child="a" href={item.url} tooltip={item.title}>
             <.dynamic :if={not is_nil(item[:icon])} tag={item.icon} />
             <span>{item.title}</span>

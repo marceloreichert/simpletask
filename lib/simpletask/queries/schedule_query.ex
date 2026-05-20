@@ -6,6 +6,38 @@ defmodule Simpletask.Queries.ScheduleQuery do
   alias Simpletask.Schemas.ScheduleSchema
   alias Simpletask.Schemas.ScheduleDetailSchema
 
+  def list_my_schedules(%{professional_id: nil}), do: []
+  def list_my_schedules(%{professional_id: professional_id}) do
+    today = Date.utc_today()
+
+    from(s in ScheduleSchema,
+      join: p in assoc(s, :professional),
+      join: sp in assoc(p, :specialty),
+      where: s.schedule_date >= ^today and p.id == ^professional_id,
+      order_by: [s.schedule_date, s.schedule_time_start],
+      preload: [professional: {p, specialty: sp}]
+    )
+    |> Repo.all()
+  end
+
+  def list_schedules_with_available_by_specialty(%{unit_id: unit_id} = _user) do
+    today = Date.utc_today()
+
+    from(s in ScheduleSchema,
+      join: p in assoc(s, :professional),
+      join: sp in assoc(p, :specialty),
+      where: s.schedule_date >= ^today and p.unit_id == ^unit_id,
+      where:
+        fragment(
+          "EXISTS (SELECT 1 FROM schedule_details d WHERE d.schedule_id = ? AND d.status = 'available')",
+          s.id
+        ),
+      order_by: [sp.name, s.schedule_date, s.schedule_time_start],
+      preload: [professional: {p, specialty: sp}]
+    )
+    |> Repo.all()
+  end
+
   def list_schedules_with_available_today(%{unit_id: unit_id} = _user) do
     today = Date.utc_today()
 
@@ -17,8 +49,24 @@ defmodule Simpletask.Queries.ScheduleQuery do
           "EXISTS (SELECT 1 FROM schedule_details d WHERE d.schedule_id = ? AND d.status = 'available')",
           s.id
         ),
-      order_by: s.schedule_time_start,
+      order_by: [s.schedule_date, s.schedule_time_start],
       preload: [professional: :specialty]
+    )
+    |> Repo.all()
+  end
+
+  def search_details_by_patient(%{unit_id: unit_id} = _user, search) do
+    term = "%#{search}%"
+
+    from(d in ScheduleDetailSchema,
+      join: s in assoc(d, :schedule),
+      join: p in assoc(s, :professional),
+      join: sp in assoc(p, :specialty),
+      join: pat in assoc(d, :patient),
+      where: p.unit_id == ^unit_id,
+      where: ilike(pat.name, ^term),
+      order_by: [s.schedule_date, d.schedule_time],
+      preload: [schedule: {s, professional: {p, specialty: sp}}, patient: pat]
     )
     |> Repo.all()
   end
@@ -55,11 +103,23 @@ defmodule Simpletask.Queries.ScheduleQuery do
     |> Repo.preload(professional: :specialty)
   end
 
-  def list_professional_options(%{unit_id: unit_id} = _user) do
-    Simpletask.Schemas.ProfessionalSchema
-    |> where([p], p.unit_id == ^unit_id)
+  def list_health_insurance_options do
+    alias Simpletask.Schemas.HealthInsuranceSchema
+
+    from(h in HealthInsuranceSchema, order_by: h.name, select: {h.name, h.id})
     |> Repo.all()
-    |> Enum.map(fn p -> {p.name, p.id} end)
+  end
+
+  def list_professional_options(%{unit_id: unit_id} = _user) do
+    alias Simpletask.Schemas.SpecialtySchema
+
+    from(p in Simpletask.Schemas.ProfessionalSchema,
+      join: sp in SpecialtySchema,
+      on: p.specialty_id == sp.id,
+      where: p.unit_id == ^unit_id and sp.scheduling_allowed == true,
+      select: {p.name, p.id}
+    )
+    |> Repo.all()
   end
 
   def get_schedule!(id),
@@ -67,6 +127,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
       Repo.get!(ScheduleSchema, id)
       |> Repo.preload([
         :room,
+        :health_insurance,
         schedule_details: {from(d in ScheduleDetailSchema, order_by: d.schedule_time), [:patient]},
         professional: :specialty
       ])

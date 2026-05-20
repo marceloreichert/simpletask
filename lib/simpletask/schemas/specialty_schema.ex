@@ -9,12 +9,13 @@ defmodule Simpletask.Schemas.SpecialtySchema do
     :cbo_number
   ]
 
-  @fields_optional []
+  @fields_optional [:scheduling_allowed]
 
   schema "specialties" do
     field :name, :string
     field :description, :string
     field :cbo_number, :string
+    field :scheduling_allowed, :boolean, default: false
 
     timestamps(type: :utc_datetime)
   end

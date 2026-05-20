@@ -3,6 +3,7 @@ defmodule SimpletaskWeb.ScheduleLive.FormComponent do
 
   alias Simpletask.Queries.ProfessionalQuery
   alias Simpletask.Queries.ScheduleQuery
+  alias Simpletask.Schemas.ScheduleSchema
 
   @impl true
   def render(assigns) do
@@ -20,21 +21,39 @@ defmodule SimpletaskWeb.ScheduleLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input_core field={@form[:schedule_date]} type="date" label="Data" />
-        <.input_core field={@form[:schedule_time_start]} type="time" label="Início" />
-        <.input_core field={@form[:schedule_time_end]} type="time" label="Fim" />
         <.input_core
-          field={@form[:room_id]}
+          field={@form[:schedule_type]}
           type="select"
-          label="Sala de Atendimento"
-          options={@room_options}
+          label="Tipo de Agenda"
+          options={ScheduleSchema.schedule_type_options()}
           prompt="Selecione..."
         />
+        <%= if @selected_schedule_type == "health_insurance" do %>
+          <.input_core
+            field={@form[:health_insurance_id]}
+            type="select"
+            label="Convênio"
+            options={@health_insurance_options}
+            prompt="Selecione..."
+          />
+        <% end %>
+        <div class="grid grid-cols-3 gap-4">
+          <.input_core field={@form[:schedule_date]} type="date" label="Data" />
+          <.input_core field={@form[:schedule_time_start]} type="time" label="Início" />
+          <.input_core field={@form[:schedule_time_end]} type="time" label="Fim" />
+        </div>
         <.input_core
           field={@form[:professional_id]}
           type="select"
           label="Profissional"
           options={@professional_options}
+          prompt="Selecione..."
+        />
+        <.input_core
+          field={@form[:room_id]}
+          type="select"
+          label="Sala de Atendimento"
+          options={@room_options}
           prompt="Selecione..."
         />
         <.input_core
@@ -61,6 +80,8 @@ defmodule SimpletaskWeb.ScheduleLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign(:selected_professional_id, schedule.professional_id)
+     |> assign(:selected_schedule_type, schedule.schedule_type)
+     |> assign(:health_insurance_options, ScheduleQuery.list_health_insurance_options())
      |> assign_new(:form, fn ->
        to_form(ScheduleQuery.change_schedule(schedule))
      end)}
@@ -75,6 +96,7 @@ defmodule SimpletaskWeb.ScheduleLive.FormComponent do
     {:noreply,
      socket
      |> assign(:selected_professional_id, params["professional_id"])
+     |> assign(:selected_schedule_type, params["schedule_type"])
      |> assign(form: to_form(changeset, action: :validate))}
   end
 
@@ -90,8 +112,14 @@ defmodule SimpletaskWeb.ScheduleLive.FormComponent do
       professional = ProfessionalQuery.get_professional!(new_id)
 
       params
-      |> put_professional_value("schedule_consultation_time", professional.schedule_consultation_time)
-      |> put_professional_value("schedule_time_between_consultation", professional.schedule_time_between_consultation)
+      |> put_professional_value(
+        "schedule_consultation_time",
+        professional.schedule_consultation_time
+      )
+      |> put_professional_value(
+        "schedule_time_between_consultation",
+        professional.schedule_time_between_consultation
+      )
     else
       params
     end

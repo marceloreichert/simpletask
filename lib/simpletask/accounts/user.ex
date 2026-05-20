@@ -12,6 +12,7 @@ defmodule Simpletask.Accounts.User do
     field :avatar, :string
 
     belongs_to :unit, Simpletask.Units.Unit
+    belongs_to :professional, Simpletask.Schemas.ProfessionalSchema
 
     timestamps(type: :utc_datetime)
   end

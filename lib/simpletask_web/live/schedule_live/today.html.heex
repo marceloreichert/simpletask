@@ -39,11 +39,15 @@
             </div>
             <ul class="divide-y divide-gray-100">
               <li :for={schedule <- schedules}>
-                <.link navigate={~p"/schedules/#{schedule}"} class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
-                  <p class="text-sm text-gray-700">
-                    {Calendar.strftime(schedule.schedule_date, "%d/%m/%Y")}
+                <.link navigate={~p"/schedules/#{schedule}"} class="flex items-center justify-between px-4 py-3 bg-green-50 hover:bg-green-100 transition-colors">
+                  <p class="text-sm font-medium text-green-800">
+                    <%= cond do %>
+                      <% schedule.schedule_date == @today -> %>Hoje
+                      <% schedule.schedule_date == Date.add(@today, 1) -> %>Amanhã
+                      <% true -> %>{Calendar.strftime(schedule.schedule_date, "%d/%m/%Y")}
+                    <% end %>
                   </p>
-                  <p class="text-sm font-medium text-gray-900">
+                  <p class="text-sm font-semibold text-green-800">
                     {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
                   </p>
                 </.link>

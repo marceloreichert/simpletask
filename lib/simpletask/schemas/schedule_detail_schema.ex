@@ -16,7 +16,7 @@ defmodule Simpletask.Schemas.ScheduleDetailSchema do
     timestamps(type: :utc_datetime)
   end
 
-  @valid_statuses ~w(available cancelled marked)
+  @valid_statuses ~w(available cancelled marked in_attendance attended)
 
   @doc false
   def changeset(detail, attrs) do

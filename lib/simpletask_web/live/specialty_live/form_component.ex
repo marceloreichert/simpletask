@@ -19,9 +19,10 @@ defmodule SimpletaskWeb.SpecialtyLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input_core field={@form[:name]} type="text" label="Name" />
+        <.input_core field={@form[:name]} type="text" label="Nome" />
         <.input_core field={@form[:description]} type="text" label="Descrição" />
         <.input_core field={@form[:cbo_number]} type="text" label="CBO" />
+        <.input_core field={@form[:scheduling_allowed]} type="checkbox" label="Permite agendamento" />
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar Especialidade</.button>
         </:actions>

@@ -71,7 +71,7 @@ sector1 =
 
 sector2 =
   Repo.insert!(%Simpletask.Schemas.SectorSchema{
-    name: "Ambulatórios",
+    name: "Ambulatórios da Clinica de Apoio",
     unit_id: unit2.id
   })
 
@@ -85,7 +85,7 @@ specialty1 =
 
 specialty2 =
   Repo.insert!(%Simpletask.Schemas.SpecialtySchema{
-    name: "Pediatra",
+    name: "Pediatria",
     cbo_number: "2251-35",
     description:
       "Os pediatras são médicos especializados no desenvolvimento, diagnóstico, tratamento e prevenção de doenças em bebês, crianças e adolescentes. Eles acompanham o crescimento e o desenvolvimento dos jovens pacientes, atendendo a suas necessidades físicas, emocionais e sociais."
@@ -93,14 +93,14 @@ specialty2 =
 
 specialty3 =
   Repo.insert!(%Simpletask.Schemas.SpecialtySchema{
-    name: "Psicólogo",
+    name: "Psicologia",
     cbo_number: "2515-05",
     description: "..."
   })
 
 specialty4 =
   Repo.insert!(%Simpletask.Schemas.SpecialtySchema{
-    name: "Psicanalise",
+    name: "Psicanalista",
     cbo_number: "2515-05",
     description: "..."
   })
@@ -132,6 +132,41 @@ Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   professional_id: pro1.id
 })
 
+pro4 =
+  Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
+    name: "Rafael Cardoso Melo",
+    unit_id: unit.id,
+    specialty_id: specialty1.id
+  })
+
+pro5 =
+  Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
+    name: "Fernanda Queiroz Lima",
+    unit_id: unit.id,
+    specialty_id: specialty2.id
+  })
+
+pro6 =
+  Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
+    name: "Thiago Borges Andrade",
+    unit_id: unit.id,
+    specialty_id: specialty3.id
+  })
+
+pro7 =
+  Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
+    name: "Juliana Pires Ventura",
+    unit_id: unit.id,
+    specialty_id: specialty1.id
+  })
+
+pro8 =
+  Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
+    name: "Eduardo Siqueira Neto",
+    unit_id: unit.id,
+    specialty_id: specialty4.id
+  })
+
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
   sector_id: sector1.id,
   modality_id: modality1.id,
@@ -139,21 +174,21 @@ Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
 })
 
 patients = [
-  %{name: "Ana Clara Souza",       phone_ddd: "11", phone_number: "98234-5671"},
-  %{name: "Bruno Ferreira Lima",   phone_ddd: "21", phone_number: "97812-3490"},
-  %{name: "Carla Mendes Rocha",    phone_ddd: "31", phone_number: "99123-4567"},
-  %{name: "Diego Alves Pereira",   phone_ddd: "41", phone_number: "98456-7890"},
-  %{name: "Elisa Martins Costa",   phone_ddd: "51", phone_number: "97345-6789"},
-  %{name: "Felipe Nunes Barbosa",  phone_ddd: "61", phone_number: "99678-1234"},
-  %{name: "Gabriela Torres Silva", phone_ddd: "71", phone_number: "98901-2345"},
-  %{name: "Henrique Oliveira Cruz",phone_ddd: "81", phone_number: "97234-5678"},
-  %{name: "Isabela Ramos Vieira",  phone_ddd: "85", phone_number: "99012-3456"},
-  %{name: "João Pedro Nascimento", phone_ddd: "11", phone_number: "98567-8901"},
-  %{name: "Karen Lopes Moreira",   phone_ddd: "21", phone_number: "97890-1234"},
-  %{name: "Lucas Carvalho Pinto",  phone_ddd: "31", phone_number: "99321-6543"},
-  %{name: "Mariana Freitas Dias",  phone_ddd: "41", phone_number: "98654-3210"},
-  %{name: "Nicolas Araújo Santos", phone_ddd: "51", phone_number: "97987-6543"},
-  %{name: "Olivia Campos Teixeira",phone_ddd: "61", phone_number: "99111-2233"}
+  %{name: "Ana Clara Souza",         phone_ddd: "11", phone_number: "98234-5671", email: "ana.clara@email.com"},
+  %{name: "Bruno Ferreira Lima",     phone_ddd: "21", phone_number: "97812-3490", email: "bruno.lima@email.com"},
+  %{name: "Carla Mendes Rocha",      phone_ddd: "31", phone_number: "99123-4567", email: "carla.rocha@email.com"},
+  %{name: "Diego Alves Pereira",     phone_ddd: "41", phone_number: "98456-7890", email: "diego.pereira@email.com"},
+  %{name: "Elisa Martins Costa",     phone_ddd: "51", phone_number: "97345-6789", email: "elisa.costa@email.com"},
+  %{name: "Felipe Nunes Barbosa",    phone_ddd: "61", phone_number: "99678-1234", email: "felipe.barbosa@email.com"},
+  %{name: "Gabriela Torres Silva",   phone_ddd: "71", phone_number: "98901-2345", email: "gabriela.silva@email.com"},
+  %{name: "Henrique Oliveira Cruz",  phone_ddd: "81", phone_number: "97234-5678", email: "henrique.cruz@email.com"},
+  %{name: "Isabela Ramos Vieira",    phone_ddd: "85", phone_number: "99012-3456", email: "isabela.vieira@email.com"},
+  %{name: "João Pedro Nascimento",   phone_ddd: "11", phone_number: "98567-8901", email: "joao.nascimento@email.com"},
+  %{name: "Karen Lopes Moreira",     phone_ddd: "21", phone_number: "97890-1234", email: "karen.moreira@email.com"},
+  %{name: "Lucas Carvalho Pinto",    phone_ddd: "31", phone_number: "99321-6543", email: "lucas.pinto@email.com"},
+  %{name: "Mariana Freitas Dias",    phone_ddd: "41", phone_number: "98654-3210", email: "mariana.dias@email.com"},
+  %{name: "Nicolas Araújo Santos",   phone_ddd: "51", phone_number: "97987-6543", email: "nicolas.santos@email.com"},
+  %{name: "Olivia Campos Teixeira",  phone_ddd: "61", phone_number: "99111-2233", email: "olivia.teixeira@email.com"}
 ]
 
 Enum.each(patients, fn attrs ->
@@ -161,6 +196,7 @@ Enum.each(patients, fn attrs ->
     name: attrs.name,
     phone_ddd: attrs.phone_ddd,
     phone_number: attrs.phone_number,
+    email: attrs.email,
     unit_id: unit.id
   })
 end)

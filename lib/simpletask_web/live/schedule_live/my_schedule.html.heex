@@ -1,0 +1,76 @@
+<div class="py-12 sm:py-16">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="flex items-end justify-between">
+      <div class="lg:mx-0">
+        <h2 class="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+          Minha Agenda
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+          Seus agendamentos a partir de {Calendar.strftime(@today, "%d/%m/%Y")}.
+        </p>
+      </div>
+      <.link navigate={~p"/dashboard"} class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors">
+        Voltar ao Dashboard
+      </.link>
+    </div>
+
+    <%= if is_nil(@current_user.professional_id) do %>
+      <div class="mt-12 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
+          <svg class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+          </svg>
+        </div>
+        <p class="mt-4 text-sm font-medium text-gray-900">Nenhum profissional vinculado</p>
+        <p class="mt-1 text-sm text-gray-500">Solicite ao administrador que vincule seu usuário a um profissional.</p>
+      </div>
+    <% else %>
+      <%= if Enum.empty?(@schedules) do %>
+        <div class="mt-12 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
+          </div>
+          <p class="mt-4 text-sm font-medium text-gray-900">Nenhuma agenda encontrada</p>
+          <p class="mt-1 text-sm text-gray-500">Não há agendas cadastradas para você.</p>
+        </div>
+      <% else %>
+        <ul role="list" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <li :for={schedule <- @schedules}>
+            <div class="flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
+              <.link navigate={~p"/schedules/#{schedule}/my"} class="flex items-center gap-x-4 p-4">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-lg font-semibold text-indigo-700 uppercase">
+                  {String.first(schedule.professional.name || "?")}
+                </div>
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-semibold text-gray-900">
+                    <%= cond do %>
+                      <% schedule.schedule_date == @today -> %>Hoje
+                      <% schedule.schedule_date == Date.add(@today, 1) -> %>Amanhã
+                      <% true -> %>{Calendar.strftime(schedule.schedule_date, "%d/%m/%Y")}
+                    <% end %>
+                  </p>
+                  <p class="truncate text-sm text-indigo-600">
+                    {schedule.professional.specialty.name}
+                  </p>
+                  <p class="mt-1 text-xs text-gray-500">
+                    {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
+                  </p>
+                </div>
+              </.link>
+              <div class="border-t border-gray-100 px-4 py-2">
+                <.link
+                  navigate={~p"/schedules/#{schedule}/my"}
+                  class="block w-full rounded-md bg-indigo-600 px-3 py-1.5 text-center text-xs font-medium text-white hover:bg-indigo-500 transition-colors"
+                >
+                  Atendimento
+                </.link>
+              </div>
+            </div>
+          </li>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+</div>

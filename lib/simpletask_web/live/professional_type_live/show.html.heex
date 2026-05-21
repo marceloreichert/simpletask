@@ -1,0 +1,32 @@
+<.header>
+  {@professional_type.name}
+  <:subtitle>{@professional_type.description}</:subtitle>
+  <:actions>
+    <.link patch={~p"/professional_types/#{@professional_type}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Editar</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Nome">{@professional_type.name}</:item>
+  <:item title="Descrição">{@professional_type.description}</:item>
+</.list>
+
+<.back navigate={~p"/professional_types"}>Voltar</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="professional-type-modal"
+  show
+  on_cancel={JS.patch(~p"/professional_types/#{@professional_type}")}
+>
+  <.live_component
+    module={SimpletaskWeb.ProfessionalTypeLive.FormComponent}
+    id={@professional_type.id}
+    title={@page_title}
+    action={@live_action}
+    professional_type={@professional_type}
+    patch={~p"/professional_types/#{@professional_type}"}
+  />
+</.modal>

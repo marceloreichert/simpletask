@@ -14,6 +14,18 @@
       </.link>
     </div>
 
+    <div class="mt-6">
+      <input
+        type="text"
+        name="search"
+        value={@doctor_search}
+        placeholder="Buscar por nome do médico..."
+        phx-keyup="search_doctor"
+        phx-debounce="200"
+        class="block w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+      />
+    </div>
+
     <%= if Enum.empty?(@grouped) do %>
       <div class="mt-12 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center">
         <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
@@ -47,9 +59,19 @@
                       <% true -> %>{Calendar.strftime(schedule.schedule_date, "%d/%m/%Y")}
                     <% end %>
                   </p>
-                  <p class="text-sm font-semibold text-green-800">
-                    {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
-                  </p>
+                  <div class="flex items-center gap-2">
+                    <p class="text-sm font-semibold text-green-800">
+                      {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
+                    </p>
+                    <%= if schedule.schedule_type == "health_insurance" && schedule.health_insurance do %>
+                      <%= if String.contains?(String.downcase(schedule.health_insurance.name), "unimed") do %>
+                        <img src={~p"/images/unimed-logo-1.png"} alt="Unimed" class="h-4 w-auto" />
+                      <% end %>
+                      <%= if String.contains?(String.downcase(schedule.health_insurance.name), "bradesco") do %>
+                        <img src={~p"/images/bradesco-saude-logo-1-1.png"} alt="Bradesco" class="h-4 w-auto" />
+                      <% end %>
+                    <% end %>
+                  </div>
                 </.link>
               </li>
             </ul>

@@ -22,7 +22,8 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
      |> assign(:schedule, ScheduleQuery.get_schedule!(id))
      |> assign(:professional_options, ScheduleQuery.list_professional_options(socket.assigns.current_user))
      |> assign(:room_options, RoomQuery.list_room_options(socket.assigns.current_user))
-     |> assign(:patient_options, PatientQuery.list_patient_options(socket.assigns.current_user))}
+     |> assign(:patient_options, PatientQuery.list_patient_options(socket.assigns.current_user))
+     |> assign(:current_time, DateTime.now!("America/Sao_Paulo") |> DateTime.to_time())}
   end
 
   @impl true
@@ -80,6 +81,11 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
 
   defp apply_confirm_action(socket, "start_attendance", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "in_attendance")
+    assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
+  end
+
+  defp apply_confirm_action(socket, "finalize_attendance", id) do
+    {:ok, _} = ScheduleQuery.update_detail_status(id, "done")
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 

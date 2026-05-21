@@ -14,8 +14,7 @@ defmodule Simpletask.Application do
       {Phoenix.PubSub, name: Simpletask.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Simpletask.Finch},
-      # Start a worker by calling: Simpletask.Worker.start_link(arg)
-      # {Simpletask.Worker, arg},
+      Simpletask.Workers.ScheduleCanceller,
       # Start to serve requests, typically the last entry
       SimpletaskWeb.Endpoint,
       TwMerge.Cache

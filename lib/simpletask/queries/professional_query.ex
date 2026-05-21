@@ -13,10 +13,10 @@ defmodule Simpletask.Queries.ProfessionalQuery do
     ProfessionalSchema
     |> where([t], t.unit_id == ^unit_id)
     |> Repo.all()
-    |> Repo.preload(:specialty)
+    |> Repo.preload([:specialty, :professional_type])
   end
 
-  def get_professional!(id), do: Repo.get!(ProfessionalSchema, id) |> Repo.preload(:specialty)
+  def get_professional!(id), do: Repo.get!(ProfessionalSchema, id) |> Repo.preload([:specialty, :professional_type])
 
   def create_professional(attrs \\ %{}) do
     %ProfessionalSchema{}

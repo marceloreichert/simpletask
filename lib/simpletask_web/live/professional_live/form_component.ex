@@ -109,6 +109,13 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
           type="number"
           label="Intervalo entre consultas (min)"
         />
+        <.input_core
+          field={@form[:private_consultation_price]}
+          type="number"
+          label="Valor da consulta particular (R$)"
+          step="0.01"
+          min="0"
+        />
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar Dados</.button>
         </:actions>

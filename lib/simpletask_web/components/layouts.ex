@@ -30,7 +30,7 @@ defmodule SimpletaskWeb.Layouts do
       %{title: "Agendas do Dia", url: ~p"/dashboard", icon: &calendar/1},
       %{title: "Agendas por Médicos", url: ~p"/schedules/today", icon: &calendar_days/1},
       %{title: "Agendas por Especialidade", url: ~p"/schedules/specialty", icon: &stethoscope/1},
-      %{title: "Agendas", url: ~p"/schedules", icon: &calendar_range/1}
+      %{title: "Gerenciar Agendas", url: ~p"/schedules", icon: &calendar_range/1}
     ]
   end
 
@@ -59,6 +59,10 @@ defmodule SimpletaskWeb.Layouts do
           %{
             title: "Especialidades",
             url: ~p"/specialties"
+          },
+          %{
+            title: "Tipos de Profissional",
+            url: ~p"/professional_types"
           },
           %{
             title: "Convênios",

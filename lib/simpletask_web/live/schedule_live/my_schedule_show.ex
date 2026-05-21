@@ -15,7 +15,8 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleShow do
     {:noreply,
      socket
      |> assign(:page_title, "Minha Agenda — Atendimento")
-     |> assign(:schedule, ScheduleQuery.get_schedule!(id))}
+     |> assign(:schedule, ScheduleQuery.get_schedule!(id))
+     |> assign(:current_time, DateTime.now!("America/Sao_Paulo") |> DateTime.to_time())}
   end
 
   @impl true
@@ -29,19 +30,37 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleShow do
   end
 
   @impl true
+  def handle_event("initiate_attendance", %{"id" => id}, socket) do
+    if ScheduleQuery.professional_has_in_attendance?(id) do
+      {:noreply, put_flash(socket, :error, "Este médico já possui um atendimento em andamento.")}
+    else
+      {:noreply, push_navigate(socket, to: ~p"/schedules/#{socket.assigns.schedule.id}/my/attend/#{id}")}
+    end
+  end
+
+  @impl true
+  def handle_event("mark_showed_up", %{"id" => id}, socket) do
+    {:ok, _} = ScheduleQuery.update_detail_status(id, "showed_up")
+    {:noreply, assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))}
+  end
+
+  @impl true
   def handle_event("execute_confirm", _, socket) do
     %{action: action, id: id} = socket.assigns.pending_confirm
-    socket = apply_confirm_action(socket, action, id)
-    {:noreply, assign(socket, :pending_confirm, nil)}
+    {:noreply, apply_confirm_action(assign(socket, :pending_confirm, nil), action, id)}
   end
 
   defp apply_confirm_action(socket, "start_attendance", id) do
-    {:ok, _} = ScheduleQuery.update_detail_status(id, "in_attendance")
-    assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
+    if ScheduleQuery.professional_has_in_attendance?(id) do
+      put_flash(socket, :error, "Este médico já possui um atendimento em andamento.")
+    else
+      {:ok, _} = ScheduleQuery.update_detail_status(id, "in_attendance")
+      push_navigate(socket, to: ~p"/schedules/#{socket.assigns.schedule.id}/my/attend/#{id}")
+    end
   end
 
   defp apply_confirm_action(socket, "attend_detail", id) do
-    {:ok, _} = ScheduleQuery.update_detail_status(id, "attended")
+    {:ok, _} = ScheduleQuery.update_detail_status(id, "done")
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 

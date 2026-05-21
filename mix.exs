@@ -63,7 +63,8 @@ defmodule Simpletask.MixProject do
       {:salad_ui, "~> 0.14"},
       {:lucide_icons, "~> 2.0"},
       {:brcpfcnpj, "~> 2.0.0"},
-      {:tidewave, "~> 0.5", only: :dev}
+      {:tidewave, "~> 0.5", only: :dev},
+      {:tzdata, "~> 1.1"}
     ]
   end
 

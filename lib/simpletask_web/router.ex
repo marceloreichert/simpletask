@@ -97,6 +97,13 @@ defmodule SimpletaskWeb.Router do
       live "/specialties/:id", SpecialtyLive.Show, :show
       live "/specialties/:id/show/edit", SpecialtyLive.Show, :edit
 
+      live "/professional_types", ProfessionalTypeLive.Index, :index
+      live "/professional_types/new", ProfessionalTypeLive.Index, :new
+      live "/professional_types/:id/edit", ProfessionalTypeLive.Index, :edit
+
+      live "/professional_types/:id", ProfessionalTypeLive.Show, :show
+      live "/professional_types/:id/show/edit", ProfessionalTypeLive.Show, :edit
+
       live "/professionals", ProfessionalLive.Index, :index
       live "/professionals/new", ProfessionalLive.Index, :new
       live "/professionals/:id/edit", ProfessionalLive.Index, :edit
@@ -117,6 +124,7 @@ defmodule SimpletaskWeb.Router do
 
       live "/schedules/my", ScheduleLive.MySchedule, :index
       live "/schedules/:id/my", ScheduleLive.MyScheduleShow, :show
+      live "/schedules/:id/my/attend/:detail_id", ScheduleLive.MyScheduleAttend, :show
       live "/schedules/today", ScheduleLive.Today, :index
       live "/schedules/specialty", ScheduleLive.Specialty, :index
       live "/schedules", ScheduleLive.Index, :index

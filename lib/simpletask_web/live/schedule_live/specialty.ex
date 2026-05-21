@@ -29,7 +29,7 @@ defmodule SimpletaskWeb.ScheduleLive.Specialty do
     {:ok,
      socket
      |> assign(:grouped, grouped)
-     |> assign(:today, Date.utc_today())}
+     |> assign(:today, DateTime.now!("America/Sao_Paulo") |> DateTime.to_date())}
   end
 
   def format_time(nil), do: "--"

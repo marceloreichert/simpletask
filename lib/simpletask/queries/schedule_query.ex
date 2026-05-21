@@ -6,9 +6,11 @@ defmodule Simpletask.Queries.ScheduleQuery do
   alias Simpletask.Schemas.ScheduleSchema
   alias Simpletask.Schemas.ScheduleDetailSchema
 
+  defp today_sp, do: DateTime.now!("America/Sao_Paulo") |> DateTime.to_date()
+
   def list_my_schedules(%{professional_id: nil}), do: []
   def list_my_schedules(%{professional_id: professional_id}) do
-    today = Date.utc_today()
+    today = today_sp()
 
     from(s in ScheduleSchema,
       join: p in assoc(s, :professional),
@@ -21,7 +23,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
   end
 
   def list_schedules_with_available_by_specialty(%{unit_id: unit_id} = _user) do
-    today = Date.utc_today()
+    today = today_sp()
 
     from(s in ScheduleSchema,
       join: p in assoc(s, :professional),
@@ -39,7 +41,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
   end
 
   def list_schedules_with_available_today(%{unit_id: unit_id} = _user) do
-    today = Date.utc_today()
+    today = today_sp()
 
     from(s in ScheduleSchema,
       join: p in assoc(s, :professional),
@@ -50,13 +52,14 @@ defmodule Simpletask.Queries.ScheduleQuery do
           s.id
         ),
       order_by: [s.schedule_date, s.schedule_time_start],
-      preload: [professional: :specialty]
+      preload: [:health_insurance, professional: :specialty]
     )
     |> Repo.all()
   end
 
   def search_details_by_patient(%{unit_id: unit_id} = _user, search) do
     term = "%#{search}%"
+    today = today_sp()
 
     from(d in ScheduleDetailSchema,
       join: s in assoc(d, :schedule),
@@ -64,15 +67,16 @@ defmodule Simpletask.Queries.ScheduleQuery do
       join: sp in assoc(p, :specialty),
       join: pat in assoc(d, :patient),
       where: p.unit_id == ^unit_id,
+      where: s.schedule_date == ^today,
       where: ilike(pat.name, ^term),
-      order_by: [s.schedule_date, d.schedule_time],
+      order_by: [d.schedule_time],
       preload: [schedule: {s, professional: {p, specialty: sp}}, patient: pat]
     )
     |> Repo.all()
   end
 
   def list_details_today(%{unit_id: unit_id} = _user) do
-    today = Date.utc_today()
+    today = today_sp()
 
     from(d in ScheduleDetailSchema,
       join: s in assoc(d, :schedule),
@@ -85,20 +89,21 @@ defmodule Simpletask.Queries.ScheduleQuery do
   end
 
   def list_schedules_today(%{unit_id: unit_id} = _user) do
-    today = Date.utc_today()
+    today = today_sp()
 
     ScheduleSchema
     |> join(:inner, [s], p in assoc(s, :professional))
     |> where([s, p], s.schedule_date == ^today and p.unit_id == ^unit_id)
     |> order_by([s], s.schedule_time_start)
     |> Repo.all()
-    |> Repo.preload(professional: :specialty)
+    |> Repo.preload([:health_insurance, professional: :specialty])
   end
 
   def list_schedules(%{unit_id: unit_id} = _user) do
     ScheduleSchema
     |> join(:inner, [s], p in assoc(s, :professional))
     |> where([s, p], p.unit_id == ^unit_id)
+    |> order_by([s, p], [desc: s.schedule_date, asc: p.name])
     |> Repo.all()
     |> Repo.preload(professional: :specialty)
   end
@@ -143,14 +148,20 @@ defmodule Simpletask.Queries.ScheduleQuery do
         schedule.schedule_time_between_consultation || 0
       )
 
-      details =
-        Enum.map(slots, fn slot_time ->
-          %ScheduleDetailSchema{}
-          |> ScheduleDetailSchema.changeset(%{schedule_id: schedule.id, schedule_time: slot_time, status: "available"})
-          |> Repo.insert!()
+      results =
+        Enum.reduce_while(slots, {:ok, []}, fn slot_time, {:ok, acc} ->
+          case %ScheduleDetailSchema{}
+               |> ScheduleDetailSchema.changeset(%{schedule_id: schedule.id, schedule_time: slot_time, status: "available", health_insurance_id: schedule.health_insurance_id})
+               |> Repo.insert() do
+            {:ok, detail} -> {:cont, {:ok, [detail | acc]}}
+            {:error, changeset} -> {:halt, {:error, changeset}}
+          end
         end)
 
-      {:ok, details}
+      case results do
+        {:ok, details} -> {:ok, Enum.reverse(details)}
+        {:error, reason} -> {:error, reason}
+      end
     end)
     |> Repo.transaction()
     |> case do
@@ -164,11 +175,25 @@ defmodule Simpletask.Queries.ScheduleQuery do
        when is_nil(time_start),
        do: []
 
+  defp generate_time_slots(_time_start, time_end, _consultation_time, _between_time)
+       when is_nil(time_end),
+       do: []
+
+  defp generate_time_slots(_time_start, _time_end, consultation_time, _between_time)
+       when is_nil(consultation_time) or consultation_time <= 0,
+       do: []
+
   defp generate_time_slots(time_start, time_end, consultation_time, between_time) do
     slot_seconds = (consultation_time + between_time) * 60
+    total_seconds = Time.diff(time_end, time_start)
 
-    Stream.iterate(time_start, &Time.add(&1, slot_seconds, :second))
-    |> Enum.take_while(&(Time.compare(&1, time_end) == :lt))
+    if total_seconds <= 0 do
+      []
+    else
+      max_slots = div(total_seconds, slot_seconds)
+      Stream.iterate(time_start, &Time.add(&1, slot_seconds, :second))
+      |> Enum.take(max_slots)
+    end
   end
 
   def update_schedule(%ScheduleSchema{} = schedule, attrs) do
@@ -185,11 +210,54 @@ defmodule Simpletask.Queries.ScheduleQuery do
     ScheduleSchema.changeset(schedule, attrs)
   end
 
+  def get_detail!(id) do
+    Repo.get!(ScheduleDetailSchema, id)
+    |> Repo.preload([:patient, schedule: [professional: :specialty]])
+  end
+
   def update_detail_status(id, status, attrs \\ %{}) do
     detail = Repo.get!(ScheduleDetailSchema, id)
 
     detail
     |> ScheduleDetailSchema.changeset(Map.merge(%{status: status}, attrs))
     |> Repo.update()
+  end
+
+  def update_detail_notes(id, notes) do
+    detail = Repo.get!(ScheduleDetailSchema, id)
+
+    detail
+    |> ScheduleDetailSchema.changeset(%{status: "in_attendance", notes: notes})
+    |> Repo.update()
+  end
+
+  def professional_has_in_attendance?(detail_id) do
+    from(d in ScheduleDetailSchema,
+      join: s in assoc(d, :schedule),
+      join: other in ScheduleDetailSchema,
+      on: other.id == ^detail_id,
+      join: other_s in assoc(other, :schedule),
+      where: d.status == "in_attendance",
+      where: s.professional_id == other_s.professional_id,
+      where: d.id != ^detail_id
+    )
+    |> Repo.exists?()
+  end
+
+  def cancel_past_available_details do
+    now_sp = DateTime.now!("America/Sao_Paulo")
+    today = DateTime.to_date(now_sp)
+    current_time = DateTime.to_time(now_sp)
+    now_utc = DateTime.utc_now()
+
+    from(d in ScheduleDetailSchema,
+      join: s in assoc(d, :schedule),
+      where: d.status == "available",
+      where:
+        s.schedule_date < ^today or
+          (s.schedule_date == ^today and d.schedule_time < ^current_time),
+      update: [set: [status: "cancelled", updated_at: ^now_utc]]
+    )
+    |> Repo.update_all([])
   end
 end

@@ -1,0 +1,47 @@
+<.header>
+  Tipos de Profissionais de Saúde
+  <:actions>
+    <.link patch={~p"/professional_types/new"}>
+      <.button>Novo Tipo</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="professional_types"
+  rows={@streams.professional_types}
+  row_click={fn {_id, pt} -> JS.navigate(~p"/professional_types/#{pt}") end}
+>
+  <:col :let={{_id, pt}} label="Nome">{pt.name}</:col>
+  <:col :let={{_id, pt}} label="Descrição">{pt.description}</:col>
+  <:action :let={{_id, pt}}>
+    <div class="sr-only">
+      <.link navigate={~p"/professional_types/#{pt}"}>Detalhes</.link>
+    </div>
+    <.link patch={~p"/professional_types/#{pt}/edit"}>Editar</.link>
+  </:action>
+  <:action :let={{id, pt}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: pt.id}) |> hide("##{id}")}
+      data-confirm="Tem certeza que deseja excluir este tipo?"
+    >
+      Excluir
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="professional-type-modal"
+  show
+  on_cancel={JS.patch(~p"/professional_types")}
+>
+  <.live_component
+    module={SimpletaskWeb.ProfessionalTypeLive.FormComponent}
+    id={@professional_type.id || :new}
+    title={@page_title}
+    action={@live_action}
+    professional_type={@professional_type}
+    patch={~p"/professional_types"}
+  />
+</.modal>

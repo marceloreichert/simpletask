@@ -49,6 +49,11 @@
   <:item title="Document profissional uf">{@professional.document_professional_uf}</:item>
   <:item title="Tempo de consulta (min)">{@professional.schedule_consultation_time}</:item>
   <:item title="Intervalo entre consultas (min)">{@professional.schedule_time_between_consultation}</:item>
+  <:item title="Valor da consulta particular">
+    <%= if @professional.private_consultation_price do %>
+      R$ {Decimal.to_string(@professional.private_consultation_price)}
+    <% end %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/professionals"}>Back to professional</.back>

@@ -11,6 +11,45 @@
 # and so on) as they will fail if something goes wrong.
 alias Simpletask.Repo
 
+particular_logo = """
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" rx="20" fill="#ffffff"/>
+  <circle cx="200" cy="160" r="100" fill="#0F6E56"/>
+  <circle cx="200" cy="130" r="28" fill="#E1F5EE"/>
+  <path d="M148 206 Q148 178 200 178 Q252 178 252 206" fill="#E1F5EE"/>
+  <polyline points="148,240 162,240 168,222 180,260 192,210 204,260 212,240 234,240 252,240"
+            fill="none" stroke="#E1F5EE" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="200" y="300" font-family="Arial, sans-serif" font-size="22" font-weight="400"
+        fill="#0F6E56" text-anchor="middle">CONSULTA</text>
+  <text x="200" y="332" font-family="Arial, sans-serif" font-size="26" font-weight="700"
+        fill="#0F6E56" text-anchor="middle" letter-spacing="3">PARTICULAR</text>
+</svg>
+"""
+
+professional_types = [
+  %{name: "Médico", description: "Profissional com formação em medicina habilitado para diagnóstico e tratamento de doenças."},
+  %{name: "Enfermeiro", description: "Profissional responsável pelo cuidado e assistência de enfermagem ao paciente."},
+  %{name: "Fisioterapeuta", description: "Especialista em reabilitação física e prevenção de disfunções do movimento."},
+  %{name: "Psicólogo", description: "Profissional habilitado para avaliação e intervenção em saúde mental."},
+  %{name: "Nutricionista", description: "Especialista em alimentação, nutrição e promoção da saúde nutricional."},
+  %{name: "Odontólogo", description: "Profissional especializado em saúde bucal, prevenção e tratamento de doenças dentárias."},
+  %{name: "Fonoaudiólogo", description: "Especialista em comunicação humana e distúrbios de linguagem, voz e audição."},
+  %{name: "Terapeuta Ocupacional", description: "Profissional que promove a autonomia e qualidade de vida por meio de atividades terapêuticas."},
+  %{name: "Farmacêutico", description: "Especialista em medicamentos, com atuação em farmácia clínica e orientação farmacoterapêutica."},
+  %{name: "Biomédico", description: "Profissional habilitado para análises clínicas, diagnóstico laboratorial e pesquisa biomédica."}
+]
+
+Enum.each(professional_types, fn attrs ->
+  Repo.insert!(%Simpletask.Schemas.ProfessionalTypeSchema{
+    name: attrs.name,
+    description: attrs.description
+  })
+end)
+
+Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Unimed"})
+Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Bradesco"})
+Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Particular", logo: particular_logo})
+
 modality1 =
   Repo.insert!(%Simpletask.Schemas.ModalitySchema{
     name: "Clínica/Ambulatório"
@@ -105,25 +144,36 @@ specialty4 =
     description: "..."
   })
 
+medico_type = Repo.get_by!(Simpletask.Schemas.ProfessionalTypeSchema, name: "Médico")
+
 pro1 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Marcelo Reichert",
     unit_id: unit.id,
-    specialty_id: specialty4.id
+    specialty_id: specialty4.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 50,
+    schedule_time_between_consultation: 10
   })
 
 pro2 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Médico da Unit 2",
     unit_id: unit2.id,
-    specialty_id: specialty2.id
+    specialty_id: specialty2.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 30,
+    schedule_time_between_consultation: 5
   })
 
 pro3 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Lorena Azevedo",
     unit_id: unit.id,
-    specialty_id: specialty2.id
+    specialty_id: specialty2.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 30,
+    schedule_time_between_consultation: 5
   })
 
 Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
@@ -136,42 +186,51 @@ pro4 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Rafael Cardoso Melo",
     unit_id: unit.id,
-    specialty_id: specialty1.id
+    specialty_id: specialty1.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 20,
+    schedule_time_between_consultation: 5
   })
 
 pro5 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Fernanda Queiroz Lima",
     unit_id: unit.id,
-    specialty_id: specialty2.id
+    specialty_id: specialty2.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 30,
+    schedule_time_between_consultation: 10
   })
 
 pro6 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Thiago Borges Andrade",
     unit_id: unit.id,
-    specialty_id: specialty3.id
+    specialty_id: specialty3.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 50,
+    schedule_time_between_consultation: 10
   })
 
 pro7 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Juliana Pires Ventura",
     unit_id: unit.id,
-    specialty_id: specialty1.id
+    specialty_id: specialty1.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 20,
+    schedule_time_between_consultation: 5
   })
 
 pro8 =
   Repo.insert!(%Simpletask.Schemas.ProfessionalSchema{
     name: "Eduardo Siqueira Neto",
     unit_id: unit.id,
-    specialty_id: specialty4.id
+    specialty_id: specialty4.id,
+    professional_type_id: medico_type.id,
+    schedule_consultation_time: 50,
+    schedule_time_between_consultation: 10
   })
-
-Repo.insert!(%Simpletask.Schemas.ProfessionalSectorSchema{
-  sector_id: sector1.id,
-  modality_id: modality1.id,
-  professional_id: pro1.id
-})
 
 patients = [
   %{name: "Ana Clara Souza",         phone_ddd: "11", phone_number: "98234-5671", email: "ana.clara@email.com"},

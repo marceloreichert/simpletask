@@ -10,7 +10,7 @@ defmodule SimpletaskWeb.ScheduleLive.MySchedule do
     {:ok,
      socket
      |> assign(:schedules, schedules)
-     |> assign(:today, Date.utc_today())}
+     |> assign(:today, DateTime.now!("America/Sao_Paulo") |> DateTime.to_date())}
   end
 
   def format_time(nil), do: "--"

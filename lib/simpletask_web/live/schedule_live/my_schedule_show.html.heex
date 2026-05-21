@@ -33,13 +33,16 @@
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <div
         :for={detail <- @schedule.schedule_details}
+        :if={not (detail.status == "cancelled" and Time.compare(detail.schedule_time, @current_time) == :lt)}
         class={[
           "flex flex-col gap-3 rounded-lg border px-4 py-3 shadow-sm",
           detail.status == "available" && "border-gray-200 bg-white",
           detail.status == "marked" && "border-green-400 bg-green-100",
           detail.status == "in_attendance" && "border-indigo-400 bg-indigo-50",
           detail.status == "cancelled" && "border-red-400 bg-red-100",
-          detail.status == "attended" && "border-blue-400 bg-blue-50"
+          detail.status == "attended" && "border-yellow-500 bg-yellow-100",
+          detail.status == "showed_up" && "border-amber-400 bg-amber-50",
+          detail.status == "done" && "border-green-400 bg-green-50"
         ]}
       >
         <div class="flex items-center justify-between gap-3">
@@ -49,14 +52,16 @@
               detail.status == "marked" && "bg-green-200 text-green-800",
               detail.status == "in_attendance" && "bg-indigo-200 text-indigo-800",
               detail.status == "cancelled" && "bg-red-200 text-red-700",
-              detail.status == "attended" && "bg-blue-200 text-blue-800",
-              detail.status == "available" && "bg-gray-100 text-gray-500"
+              detail.status == "attended" && "bg-yellow-400 text-yellow-900",
+              detail.status == "available" && "bg-gray-100 text-gray-500",
+              detail.status == "showed_up" && "bg-amber-200 text-amber-800",
+              detail.status == "done" && "bg-green-200 text-green-800"
             ]}>
               <%= cond do %>
-                <% detail.status in ["marked", "in_attendance", "attended"] and detail.patient -> %>
+                <% detail.status in ["marked", "in_attendance", "attended", "showed_up", "done"] and detail.patient -> %>
                   {detail.patient.name |> String.split() |> Enum.take(2) |> Enum.map(&String.first/1) |> Enum.join()}
                 <% detail.status == "cancelled" -> %>
-                  ✕
+                X
                 <% true -> %>
                   ?
               <% end %>
@@ -76,6 +81,8 @@
                       <br />
                       <span class="text-xs text-gray-500">{detail.patient.email}</span>
                     <% end %>
+                    <br />
+                    <span class="text-xs text-green-600 font-medium">Aguardando Comparecimento</span>
                   <% "in_attendance" -> %>
                     <span class="font-bold text-gray-900">{detail.patient && detail.patient.name}</span>
                     <br />
@@ -95,7 +102,27 @@
                       <span class="text-xs text-gray-500">{detail.patient.email}</span>
                     <% end %>
                     <br />
-                    <span class="text-xs text-blue-600 font-medium">Compareceu</span>
+                    <span class="text-xs text-yellow-700 font-medium">Aguardando Consulta</span>
+                  <% "showed_up" -> %>
+                    <span class="font-bold text-gray-900">{detail.patient && detail.patient.name}</span>
+                    <br />
+                    <span class="text-xs text-gray-500">{detail.patient && detail.patient.phone_ddd} {detail.patient && detail.patient.phone_number}</span>
+                    <%= if detail.patient && detail.patient.email do %>
+                      <br />
+                      <span class="text-xs text-gray-500">{detail.patient.email}</span>
+                    <% end %>
+                    <br />
+                    <span class="text-xs text-amber-600 font-medium">Compareceu</span>
+                  <% "done" -> %>
+                    <span class="font-bold text-gray-900">{detail.patient && detail.patient.name}</span>
+                    <br />
+                    <span class="text-xs text-gray-500">{detail.patient && detail.patient.phone_ddd} {detail.patient && detail.patient.phone_number}</span>
+                    <%= if detail.patient && detail.patient.email do %>
+                      <br />
+                      <span class="text-xs text-gray-500">{detail.patient.email}</span>
+                    <% end %>
+                    <br />
+                    <span class="text-xs text-green-600 font-medium">Atendimento Finalizado</span>
                   <% "cancelled" -> %><span class="font-medium text-red-700">Cancelado</span>
                   <% _ -> %>{detail.status}
                 <% end %>
@@ -104,7 +131,7 @@
           </div>
 
           <div class="flex flex-col gap-1">
-            <%= if detail.status == "marked" do %>
+            <%= if detail.status == "showed_up" do %>
               <button
                 phx-click="request_confirm"
                 phx-value-action="start_attendance"
@@ -116,23 +143,29 @@
               </button>
             <% end %>
             <%= if detail.status == "in_attendance" do %>
+              <.link
+                navigate={~p"/schedules/#{@schedule.id}/my/attend/#{detail.id}"}
+                class="rounded-md border border-indigo-400 bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-800 hover:bg-indigo-200 text-center"
+              >
+                Ver Anotações
+              </.link>
               <button
                 phx-click="request_confirm"
                 phx-value-action="attend_detail"
                 phx-value-id={detail.id}
                 phx-value-color="blue"
+                class="rounded-md border border-red-400 bg-red-100 px-2 py-1 text-xs font-medium text-red-800 hover:bg-red-200"
+              >
+                Finalizar Atendimento
+              </button>
+            <% end %>
+            <%= if detail.status == "attended" do %>
+              <button
+                phx-click="initiate_attendance"
+                phx-value-id={detail.id}
                 class="rounded-md border border-blue-400 bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 hover:bg-blue-200"
               >
-                Compareceu
-              </button>
-              <button
-                phx-click="request_confirm"
-                phx-value-action="reopen_detail"
-                phx-value-id={detail.id}
-                phx-value-color="green"
-                class="rounded-md border border-green-400 bg-green-100 px-2 py-1 text-xs font-medium text-green-800 hover:bg-green-200"
-              >
-                Voltar para Marcado
+                Iniciar Atendimento
               </button>
             <% end %>
           </div>

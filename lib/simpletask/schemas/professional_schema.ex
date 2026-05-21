@@ -12,6 +12,8 @@ defmodule Simpletask.Schemas.ProfessionalSchema do
   @fields_optional [
     :schedule_consultation_time,
     :schedule_time_between_consultation,
+    :private_consultation_price,
+    :professional_type_id,
     :social_name,
     :mothers_name,
     :birthday,
@@ -52,6 +54,7 @@ defmodule Simpletask.Schemas.ProfessionalSchema do
   schema "professionals" do
     field :schedule_consultation_time, :integer
     field :schedule_time_between_consultation, :integer
+    field :private_consultation_price, :decimal
 
     field :social_name, :string
     field :nacionality, :string
@@ -96,6 +99,7 @@ defmodule Simpletask.Schemas.ProfessionalSchema do
 
     belongs_to :specialty, Simpletask.Schemas.SpecialtySchema
     belongs_to :unit, Simpletask.Schemas.UnitSchema
+    belongs_to :professional_type, Simpletask.Schemas.ProfessionalTypeSchema
 
     timestamps(type: :utc_datetime)
   end

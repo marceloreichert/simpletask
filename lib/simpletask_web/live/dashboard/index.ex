@@ -10,7 +10,7 @@ defmodule SimpletaskWeb.DashboardLive.Index do
     {:ok,
      socket
      |> assign(:schedules, schedules)
-     |> assign(:today, Date.utc_today())
+     |> assign(:today, DateTime.now!("America/Sao_Paulo") |> DateTime.to_date())
      |> assign(:patient_search, "")
      |> assign(:search_results, [])}
   end

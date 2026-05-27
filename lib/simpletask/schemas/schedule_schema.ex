@@ -11,10 +11,11 @@ defmodule Simpletask.Schemas.ScheduleSchema do
     :schedule_time_between_consultation,
     :schedule_type,
     :professional_id,
-    :room_id
+    :room_id,
+    :unit_id
   ]
 
-  @fields_optional [:health_insurance_id]
+  @fields_optional [:health_insurance_ids]
 
   @valid_types ~w(health_insurance unique)
 
@@ -31,10 +32,11 @@ defmodule Simpletask.Schemas.ScheduleSchema do
     field :schedule_consultation_time, :integer
     field :schedule_time_between_consultation, :integer
     field :schedule_type, :string
+    field :health_insurance_ids, {:array, Ecto.UUID}, default: []
 
+    belongs_to :unit, Simpletask.Schemas.UnitSchema
     belongs_to :professional, Simpletask.Schemas.ProfessionalSchema
     belongs_to :room, Simpletask.Schemas.RoomSchema
-    belongs_to :health_insurance, Simpletask.Schemas.HealthInsuranceSchema
 
     has_many :schedule_details, Simpletask.Schemas.ScheduleDetailSchema, foreign_key: :schedule_id
 
@@ -52,7 +54,9 @@ defmodule Simpletask.Schemas.ScheduleSchema do
 
   defp validate_health_insurance(changeset) do
     case get_field(changeset, :schedule_type) do
-      "health_insurance" -> validate_required(changeset, [:health_insurance_id])
+      "health_insurance" ->
+        ids = get_field(changeset, :health_insurance_ids) || []
+        if ids == [], do: add_error(changeset, :health_insurance_ids, "selecione pelo menos um convênio"), else: changeset
       _ -> changeset
     end
   end

@@ -59,19 +59,21 @@
                       <% true -> %>{Calendar.strftime(schedule.schedule_date, "%d/%m/%Y")}
                     <% end %>
                   </p>
-                  <div class="flex items-center gap-2">
-                    <p class="text-sm font-semibold text-green-800">
-                      {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
-                    </p>
-                    <%= if schedule.schedule_type == "health_insurance" && schedule.health_insurance do %>
-                      <%= if String.contains?(String.downcase(schedule.health_insurance.name), "unimed") do %>
-                        <img src={~p"/images/unimed-logo-1.png"} alt="Unimed" class="h-4 w-auto" />
+                  <%= if schedule.schedule_type == "health_insurance" do %>
+                    <div class="flex items-center gap-1">
+                      <%= for id <- schedule.health_insurance_ids, hi = @health_insurances_map[id], not is_nil(hi) do %>
+                        <%= if String.contains?(String.downcase(hi.name), "unimed") do %>
+                          <img src={~p"/images/unimed-logo-1.png"} alt="Unimed" class="h-4 w-auto" />
+                        <% end %>
+                        <%= if String.contains?(String.downcase(hi.name), "bradesco") do %>
+                          <img src={~p"/images/bradesco-saude-logo-1-1.png"} alt="Bradesco" class="h-4 w-auto" />
+                        <% end %>
                       <% end %>
-                      <%= if String.contains?(String.downcase(schedule.health_insurance.name), "bradesco") do %>
-                        <img src={~p"/images/bradesco-saude-logo-1-1.png"} alt="Bradesco" class="h-4 w-auto" />
-                      <% end %>
-                    <% end %>
-                  </div>
+                    </div>
+                  <% end %>
+                  <p class="text-sm font-semibold text-green-800">
+                    {format_time(schedule.schedule_time_start)} - {format_time(schedule.schedule_time_end)}
+                  </p>
                 </.link>
               </li>
             </ul>

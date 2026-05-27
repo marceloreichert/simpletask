@@ -68,6 +68,7 @@ defmodule SimpletaskWeb.Router do
       on_mount: [{SimpletaskWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/users/manage", UserLive.Index, :index
 
       live "/modalities", ModalityLive.Index, :index
       live "/modalities/new", ModalityLive.Index, :new

@@ -16,6 +16,8 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    if connected?(socket), do: Phoenix.PubSub.subscribe(Simpletask.PubSub, "schedule:#{id}")
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
@@ -23,7 +25,13 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
      |> assign(:professional_options, ScheduleQuery.list_professional_options(socket.assigns.current_user))
      |> assign(:room_options, RoomQuery.list_room_options(socket.assigns.current_user))
      |> assign(:patient_options, PatientQuery.list_patient_options(socket.assigns.current_user))
-     |> assign(:current_time, DateTime.now!("America/Sao_Paulo") |> DateTime.to_time())}
+     |> assign(:current_time, DateTime.now!("America/Sao_Paulo") |> DateTime.to_time())
+     |> assign(:current_date, DateTime.now!("America/Sao_Paulo") |> DateTime.to_date())
+     |> then(fn s ->
+       schedule = s.assigns.schedule
+       hi_map = ScheduleQuery.get_health_insurances_by_ids(schedule.health_insurance_ids) |> Map.new(&{&1.id, &1})
+       assign(s, :health_insurances_map, hi_map)
+     end)}
   end
 
   @impl true
@@ -32,9 +40,12 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
   end
 
   @impl true
-  def handle_event("confirm_mark", %{"patient_id" => patient_id}, socket) do
+  def handle_event("confirm_mark", params, socket) do
     id = socket.assigns.marking_detail_id
-    {:ok, _} = ScheduleQuery.update_detail_status(id, "marked", %{patient_id: patient_id})
+    attrs = %{patient_id: params["patient_id"]}
+    attrs = if hi_id = params["health_insurance_id"], do: Map.put(attrs, :health_insurance_id, hi_id), else: attrs
+    {:ok, _} = ScheduleQuery.update_detail_status(id, "marked", attrs)
+    broadcast_schedule_update(socket)
 
     {:noreply,
      socket
@@ -66,27 +77,41 @@ defmodule SimpletaskWeb.ScheduleLive.Show do
 
   defp apply_confirm_action(socket, "cancel_detail", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "cancelled")
+    broadcast_schedule_update(socket)
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 
   defp apply_confirm_action(socket, "reopen_detail", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "available", %{patient_id: nil})
+    broadcast_schedule_update(socket)
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 
   defp apply_confirm_action(socket, "attend_detail", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "attended")
+    broadcast_schedule_update(socket)
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 
   defp apply_confirm_action(socket, "start_attendance", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "in_attendance")
+    broadcast_schedule_update(socket)
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
   end
 
   defp apply_confirm_action(socket, "finalize_attendance", id) do
     {:ok, _} = ScheduleQuery.update_detail_status(id, "done")
+    broadcast_schedule_update(socket)
     assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))
+  end
+
+  defp broadcast_schedule_update(socket) do
+    Phoenix.PubSub.broadcast(Simpletask.PubSub, "schedule:#{socket.assigns.schedule.id}", :schedule_updated)
+  end
+
+  @impl true
+  def handle_info(:schedule_updated, socket) do
+    {:noreply, assign(socket, :schedule, ScheduleQuery.get_schedule!(socket.assigns.schedule.id))}
   end
 
   defp page_title(:show), do: "Agenda"

@@ -28,7 +28,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
     from(s in ScheduleSchema,
       join: p in assoc(s, :professional),
       join: sp in assoc(p, :specialty),
-      where: s.schedule_date >= ^today and p.unit_id == ^unit_id,
+      where: s.schedule_date >= ^today and s.unit_id == ^unit_id,
       where:
         fragment(
           "EXISTS (SELECT 1 FROM schedule_details d WHERE d.schedule_id = ? AND d.status = 'available')",
@@ -44,15 +44,14 @@ defmodule Simpletask.Queries.ScheduleQuery do
     today = today_sp()
 
     from(s in ScheduleSchema,
-      join: p in assoc(s, :professional),
-      where: s.schedule_date >= ^today and p.unit_id == ^unit_id,
+      where: s.schedule_date >= ^today and s.unit_id == ^unit_id,
       where:
         fragment(
           "EXISTS (SELECT 1 FROM schedule_details d WHERE d.schedule_id = ? AND d.status = 'available')",
           s.id
         ),
       order_by: [s.schedule_date, s.schedule_time_start],
-      preload: [:health_insurance, professional: :specialty]
+      preload: [professional: :specialty]
     )
     |> Repo.all()
   end
@@ -66,7 +65,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
       join: p in assoc(s, :professional),
       join: sp in assoc(p, :specialty),
       join: pat in assoc(d, :patient),
-      where: p.unit_id == ^unit_id,
+      where: d.unit_id == ^unit_id,
       where: s.schedule_date == ^today,
       where: ilike(pat.name, ^term),
       order_by: [d.schedule_time],
@@ -81,7 +80,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
     from(d in ScheduleDetailSchema,
       join: s in assoc(d, :schedule),
       join: p in assoc(s, :professional),
-      where: s.schedule_date == ^today and p.unit_id == ^unit_id,
+      where: s.schedule_date == ^today and d.unit_id == ^unit_id,
       order_by: [d.schedule_time],
       preload: [schedule: {s, professional: p}, patient: []]
     )
@@ -92,17 +91,16 @@ defmodule Simpletask.Queries.ScheduleQuery do
     today = today_sp()
 
     ScheduleSchema
-    |> join(:inner, [s], p in assoc(s, :professional))
-    |> where([s, p], s.schedule_date == ^today and p.unit_id == ^unit_id)
+    |> where([s], s.schedule_date == ^today and s.unit_id == ^unit_id)
     |> order_by([s], s.schedule_time_start)
     |> Repo.all()
-    |> Repo.preload([:health_insurance, professional: :specialty])
+    |> Repo.preload([professional: :specialty])
   end
 
   def list_schedules(%{unit_id: unit_id} = _user) do
     ScheduleSchema
     |> join(:inner, [s], p in assoc(s, :professional))
-    |> where([s, p], p.unit_id == ^unit_id)
+    |> where([s, p], s.unit_id == ^unit_id)
     |> order_by([s, p], [desc: s.schedule_date, asc: p.name])
     |> Repo.all()
     |> Repo.preload(professional: :specialty)
@@ -113,6 +111,12 @@ defmodule Simpletask.Queries.ScheduleQuery do
 
     from(h in HealthInsuranceSchema, order_by: h.name, select: {h.name, h.id})
     |> Repo.all()
+  end
+
+  def get_health_insurances_by_ids([]), do: []
+  def get_health_insurances_by_ids(ids) do
+    alias Simpletask.Schemas.HealthInsuranceSchema
+    Repo.all(from h in HealthInsuranceSchema, where: h.id in ^ids)
   end
 
   def list_professional_options(%{unit_id: unit_id} = _user) do
@@ -132,7 +136,6 @@ defmodule Simpletask.Queries.ScheduleQuery do
       Repo.get!(ScheduleSchema, id)
       |> Repo.preload([
         :room,
-        :health_insurance,
         schedule_details: {from(d in ScheduleDetailSchema, order_by: d.schedule_time), [:patient]},
         professional: :specialty
       ])
@@ -151,7 +154,7 @@ defmodule Simpletask.Queries.ScheduleQuery do
       results =
         Enum.reduce_while(slots, {:ok, []}, fn slot_time, {:ok, acc} ->
           case %ScheduleDetailSchema{}
-               |> ScheduleDetailSchema.changeset(%{schedule_id: schedule.id, schedule_time: slot_time, status: "available", health_insurance_id: schedule.health_insurance_id})
+               |> ScheduleDetailSchema.changeset(%{schedule_id: schedule.id, unit_id: schedule.unit_id, schedule_time: slot_time, status: "available"})
                |> Repo.insert() do
             {:ok, detail} -> {:cont, {:ok, [detail | acc]}}
             {:error, changeset} -> {:halt, {:error, changeset}}

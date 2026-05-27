@@ -15,6 +15,7 @@ defmodule Simpletask.Application do
       # Start the Finch HTTP client for sending emails
       {Finch, name: Simpletask.Finch},
       Simpletask.Workers.ScheduleCanceller,
+      Simpletask.Serving.Whisper,
       # Start to serve requests, typically the last entry
       SimpletaskWeb.Endpoint,
       TwMerge.Cache

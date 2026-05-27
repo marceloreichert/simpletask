@@ -7,9 +7,13 @@ defmodule SimpletaskWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     schedules = ScheduleQuery.list_schedules_today(socket.assigns.current_user)
 
+    hi_ids = schedules |> Enum.flat_map(& &1.health_insurance_ids) |> Enum.uniq()
+    health_insurances_map = ScheduleQuery.get_health_insurances_by_ids(hi_ids) |> Map.new(&{&1.id, &1})
+
     {:ok,
      socket
      |> assign(:schedules, schedules)
+     |> assign(:health_insurances_map, health_insurances_map)
      |> assign(:today, DateTime.now!("America/Sao_Paulo") |> DateTime.to_date())
      |> assign(:patient_search, "")
      |> assign(:search_results, [])}

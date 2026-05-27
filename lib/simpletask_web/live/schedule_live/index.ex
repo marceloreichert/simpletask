@@ -31,8 +31,8 @@ defmodule SimpletaskWeb.ScheduleLive.Index do
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "Nova Agenda")
-    |> assign(:schedule, %ScheduleSchema{})
+    |> assign(:page_title, "Liberar Nova Agenda")
+    |> assign(:schedule, %ScheduleSchema{unit_id: socket.assigns.current_user.unit_id})
   end
 
   defp apply_action(socket, :index, _params) do

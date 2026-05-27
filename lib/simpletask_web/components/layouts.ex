@@ -85,6 +85,10 @@ defmodule SimpletaskWeb.Layouts do
         is_active: true,
         items: [
           %{
+            title: "Usuários",
+            url: ~p"/users/manage"
+          },
+          %{
             title: "Profissionais de Saúde",
             url: ~p"/professionals"
           },
@@ -213,7 +217,7 @@ defmodule SimpletaskWeb.Layouts do
       </.sidebar_menu>
     </.sidebar_group>
     <.sidebar_group>
-      <.sidebar_group_label>Atendimento</.sidebar_group_label>
+      <.sidebar_group_label>Médicos</.sidebar_group_label>
       <.sidebar_menu>
         <.sidebar_menu_item :for={item <- nav_attended_links()}>
           <.as_child tag={&sidebar_menu_button/1} child="a" href={item.url} tooltip={item.title}>

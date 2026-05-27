@@ -64,7 +64,17 @@ defmodule Simpletask.MixProject do
       {:lucide_icons, "~> 2.0"},
       {:brcpfcnpj, "~> 2.0.0"},
       {:tidewave, "~> 0.5", only: :dev},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:bodyguard, "~> 2.4"},
+      {:bumblebee, "~> 0.6"},
+      {:nx, "~> 0.9"},
+      {:exla, "~> 0.9"},
+      # Membrane — pipeline de áudio para decodificar WebM/OGG → PCM float32 → Whisper
+      {:membrane_core, "~> 1.3"},
+      {:membrane_file_plugin, "~> 0.17"},
+      {:membrane_matroska_plugin, "~> 0.6"},
+      {:membrane_opus_plugin, "~> 0.20"},
+      {:membrane_ffmpeg_swresample_plugin, "~> 0.20"}
     ]
   end
 

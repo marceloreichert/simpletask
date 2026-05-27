@@ -60,6 +60,26 @@ defmodule Simpletask.Queries.AccountQuery do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user_with_professional!(id) do
+    Repo.get!(User, id) |> Repo.preload(:professional)
+  end
+
+  def list_users(%{unit_id: unit_id}) do
+    User
+    |> where([u], u.unit_id == ^unit_id)
+    |> order_by([u], u.name)
+    |> Repo.all()
+    |> Repo.preload(professional: :specialty)
+  end
+
+  def update_user_professional(user_id, professional_id) do
+    user = Repo.get!(User, user_id)
+
+    user
+    |> Ecto.Changeset.cast(%{professional_id: professional_id}, [:professional_id])
+    |> Repo.update()
+  end
+
   ## User registration
 
   @doc """

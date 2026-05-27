@@ -3,7 +3,7 @@ defmodule Simpletask.Schemas.ScheduleDetailSchema do
 
   import Ecto.Changeset
 
-  @fields_required [:schedule_time, :schedule_id, :status]
+  @fields_required [:schedule_time, :schedule_id, :unit_id, :status]
   @fields_optional [:patient_id, :notes, :health_insurance_id]
 
   schema "schedule_details" do
@@ -11,6 +11,7 @@ defmodule Simpletask.Schemas.ScheduleDetailSchema do
     field :status, :string
     field :notes, :string
 
+    belongs_to :unit, Simpletask.Schemas.UnitSchema
     belongs_to :schedule, Simpletask.Schemas.ScheduleSchema
     belongs_to :patient, Simpletask.Schemas.PatientSchema
     belongs_to :health_insurance, Simpletask.Schemas.HealthInsuranceSchema

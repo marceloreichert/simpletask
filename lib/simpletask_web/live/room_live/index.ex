@@ -1,18 +1,28 @@
 defmodule SimpletaskWeb.RoomLive.Index do
   use SimpletaskWeb, :live_view
 
+  alias Simpletask.Policies.RoomPolicy
   alias Simpletask.Queries.RoomQuery
   alias Simpletask.Schemas.RoomSchema
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :rooms, RoomQuery.list_rooms(socket.assigns.current_user))}
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    action = socket.assigns.live_action
+
+    case Bodyguard.permit(RoomPolicy, policy_action(action), socket.assigns.current_user) do
+      :ok -> {:noreply, apply_action(socket, action, params)}
+      {:error, _} -> {:noreply, push_navigate(socket, to: ~p"/unauthorized")}
+    end
   end
+
+  defp policy_action(:index), do: :list_rooms
+  defp policy_action(:new), do: :new_room
+  defp policy_action(:edit), do: :edit_room
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
@@ -32,6 +42,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
     socket
     |> assign(:page_title, "Listagem de Salas")
     |> assign(:room, nil)
+    |> stream(:rooms, RoomQuery.list_rooms(socket.assigns.current_user))
   end
 
   @impl true
@@ -41,9 +52,14 @@ defmodule SimpletaskWeb.RoomLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    room = RoomQuery.get_room!(id)
-    {:ok, _} = RoomQuery.delete_room(room)
+    case Bodyguard.permit(RoomPolicy, :delete_room, socket.assigns.current_user) do
+      :ok ->
+        room = RoomQuery.get_room!(id)
+        {:ok, _} = RoomQuery.delete_room(room)
+        {:noreply, stream_delete(socket, :rooms, room)}
 
-    {:noreply, stream_delete(socket, :rooms, room)}
+      {:error, _} ->
+        {:noreply, push_navigate(socket, to: ~p"/unauthorized")}
+    end
   end
 end

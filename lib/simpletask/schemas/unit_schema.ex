@@ -37,6 +37,9 @@ defmodule Simpletask.Schemas.UnitSchema do
 
     belongs_to :modality, Simpletask.Schemas.ModalitySchema
 
+    has_many :patients, Simpletask.Schemas.PatientSchema
+    has_many :specialties, Simpletask.Schemas.SpecialtySchema
+
     timestamps(type: :utc_datetime)
   end
 

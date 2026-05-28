@@ -10,7 +10,7 @@ defmodule Simpletask.Serving.Whisper do
   use GenServer
   require Logger
 
-  @model "openai/whisper-small"
+  @model "openai/whisper-large-v3"
 
   # ─── API pública ──────────────────────────────────────────────────────────
 

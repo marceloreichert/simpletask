@@ -47,36 +47,19 @@ defmodule SimpletaskWeb.Layouts do
         url: "#",
         icon: &square_terminal/1,
         is_active: true,
-        items: [
-          %{
-            title: "Modalidades",
-            url: ~p"/modalities"
-          },
-          %{
-            title: "Unidade",
-            url: ~p"/units/#{user.unit_id}"
-          },
-          %{
-            title: "Especialidades",
-            url: ~p"/specialties"
-          },
-          %{
-            title: "Tipos de Profissional",
-            url: ~p"/professional_types"
-          },
-          %{
-            title: "Convênios",
-            url: ~p"/health_insurances"
-          },
-          %{
-            title: "Salas",
-            url: ~p"/rooms"
-          },
-          %{
-            title: "Setores",
-            url: ~p"/sectors"
-          }
-        ]
+        items:
+          [
+            %{title: "Modalidades", url: ~p"/modalities"},
+            if Bodyguard.permit?(Simpletask.Policies.UnitPolicy, :menu_unit, user) do
+              %{title: "Unidade", url: ~p"/units/#{user.unit_id}"}
+            end,
+            %{title: "Especialidades", url: ~p"/specialties"},
+            %{title: "Tipos de Profissional", url: ~p"/professional_types"},
+            %{title: "Convênios", url: ~p"/health_insurances"},
+            %{title: "Salas", url: ~p"/rooms"},
+            %{title: "Setores", url: ~p"/sectors"}
+          ]
+          |> Enum.reject(&is_nil/1)
       },
       %{
         title: "Cadastros Pessoas",
@@ -135,7 +118,15 @@ defmodule SimpletaskWeb.Layouts do
 
           <div class="flex items-center gap-3">
             <%= if @current_user do %>
-              <span class="hidden sm:block text-sm text-gray-500">{@current_user.email}</span>
+              <div class="hidden sm:flex flex-col items-end gap-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700">{@current_user.name}</span>
+                  <span :for={role <- @current_user.roles} class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                    {role}
+                  </span>
+                </div>
+                <span class="text-xs text-gray-400">{@current_user.email}</span>
+              </div>
               <.link
                 href={~p"/users/settings"}
                 class="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"

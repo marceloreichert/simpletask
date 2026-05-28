@@ -3,18 +3,29 @@ defmodule SimpletaskWeb.UnitLive.Index do
 
   alias Simpletask.Schemas.UnitSchema
 
+  alias Simpletask.Policies.UnitPolicy
   alias Simpletask.Queries.ModalityQuery
   alias Simpletask.Queries.UnitQuery
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :units, UnitQuery.list_units(socket.assigns.current_user))}
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    action = socket.assigns.live_action
+    policy_action = policy_action(action)
+
+    case Bodyguard.permit(UnitPolicy, policy_action, socket.assigns.current_user) do
+      :ok -> {:noreply, apply_action(socket, action, params)}
+      {:error, _} -> {:noreply, push_navigate(socket, to: ~p"/unauthorized")}
+    end
   end
+
+  defp policy_action(:index), do: :list_units
+  defp policy_action(:new), do: :new_unit
+  defp policy_action(:edit), do: :edit_unit
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
@@ -35,6 +46,7 @@ defmodule SimpletaskWeb.UnitLive.Index do
     socket
     |> assign(:page_title, "Listar Unidades")
     |> assign(:unit, nil)
+    |> stream(:units, UnitQuery.list_units(socket.assigns.current_user))
   end
 
   @impl true

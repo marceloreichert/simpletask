@@ -47,6 +47,12 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleAttend do
     {:noreply, assign(socket, recording: false, transcribing: true, transcribe_error: nil)}
   end
 
+  # Mantém @notes sincronizado com o que o usuário digita (necessário para o upload)
+  @impl true
+  def handle_event("validate", %{"notes" => notes}, socket) do
+    {:noreply, assign(socket, :notes, notes)}
+  end
+
   # JS não conseguiu acessar o microfone
   @impl true
   def handle_event("recording_error", %{"message" => message}, socket) do
@@ -71,16 +77,14 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleAttend do
           result =
             try do
               with {:ok, tensor} <- Simpletask.Audio.Decoder.decode(dest),
-                   %{results: [%{text: text} | _]} <- Simpletask.Serving.Whisper.run!(tensor) do
+                   whisper_result <- Simpletask.Serving.Whisper.run!(tensor),
+                   {:ok, text} <- extract_transcription(whisper_result) do
                 Logger.info("[AudioRecorder] transcrição ok: #{String.slice(text, 0, 50)}...")
-                {:ok, String.trim(text)}
+                {:ok, text}
               else
                 {:error, reason} ->
                   Logger.error("[AudioRecorder] decodificação falhou: #{inspect(reason)}")
                   {:error, "Decodificação: #{inspect(reason)}"}
-                other ->
-                  Logger.error("[AudioRecorder] whisper retornou: #{inspect(other)}")
-                  {:error, "Whisper: #{inspect(other)}"}
               end
             rescue
               e ->
@@ -104,12 +108,15 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleAttend do
 
   @impl true
   def handle_info({:transcription_done, {:ok, text}}, socket) do
-    Logger.info("[AudioRecorder] handle_info ok, enviando push_event")
+    Logger.info("[AudioRecorder] handle_info ok, atualizando notes")
+    current = socket.assigns.notes || ""
+    sep = if current != "" and not String.ends_with?(current, " ") and not String.ends_with?(current, "\n"), do: " ", else: ""
+    new_notes = current <> sep <> String.trim(text)
 
     {:noreply,
      socket
      |> assign(:transcribing, false)
-     |> push_event("append_transcription", %{text: text})}
+     |> assign(:notes, new_notes)}
   end
 
   @impl true
@@ -128,6 +135,27 @@ defmodule SimpletaskWeb.ScheduleLive.MyScheduleAttend do
      socket
      |> put_flash(:info, "Atendimento iniciado com sucesso")
      |> push_navigate(to: ~p"/schedules/#{socket.assigns.schedule_id}/my")}
+  end
+
+  # Extrai o texto da resposta do Whisper — suporta os dois formatos que Bumblebee pode retornar:
+  #   %{results: [%{text: "..."}]}  (formato antigo)
+  #   %{chunks: [%{text: "..."}]}   (formato novo / streaming)
+  defp extract_transcription(%{results: [%{text: text} | _]}),
+    do: {:ok, String.trim(text)}
+
+  defp extract_transcription(%{chunks: chunks}) when is_list(chunks) and chunks != [] do
+    text =
+      chunks
+      |> Enum.map(& &1.text)
+      |> Enum.join("")
+      |> String.trim()
+
+    {:ok, text}
+  end
+
+  defp extract_transcription(other) do
+    Logger.error("[AudioRecorder] whisper retornou formato inesperado: #{inspect(other)}")
+    {:error, "Whisper: formato desconhecido"}
   end
 
   def format_time(nil), do: "--"

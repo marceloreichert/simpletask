@@ -67,6 +67,8 @@ defmodule SimpletaskWeb.SpecialtyLive.FormComponent do
   end
 
   defp save_specialty(socket, :new, specialty_params) do
+    specialty_params = Map.put(specialty_params, "unit_id", socket.assigns.current_user.unit_id)
+
     case SpecialtyQuery.create_specialty(specialty_params) do
       {:ok, specialty} ->
         notify_parent({:saved, specialty})

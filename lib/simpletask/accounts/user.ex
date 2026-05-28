@@ -10,6 +10,7 @@ defmodule Simpletask.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
     field :avatar, :string
+    field :roles, {:array, Ecto.Enum}, values: [:master, :admin, :doctor, :attended, :attend], default: []
 
     belongs_to :unit, Simpletask.Units.Unit
     belongs_to :professional, Simpletask.Schemas.ProfessionalSchema
@@ -125,6 +126,12 @@ defmodule Simpletask.Accounts.User do
     |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
+  end
+
+  def roles_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:roles])
+    |> validate_required([:roles])
   end
 
   @doc """

@@ -66,6 +66,7 @@ defmodule SimpletaskWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{SimpletaskWeb.UserAuth, :ensure_authenticated}] do
+      live "/unauthorized", UnauthorizedLive, :index
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
       live "/users/manage", UserLive.Index, :index

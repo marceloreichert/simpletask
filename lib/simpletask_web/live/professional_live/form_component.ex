@@ -162,7 +162,7 @@ defmodule SimpletaskWeb.ProfessionalLive.FormComponent do
   end
 
   defp save_professional(socket, :new, professional_params) do
-    params = Map.put(professional_params, :unit_id, socket.assigs.current_user.unit_id)
+    params = Map.put(professional_params, "unit_id", socket.assigns.current_user.unit_id)
 
     case ProfessionalQuery.create_professional(params) do
       {:ok, professional} ->

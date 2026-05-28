@@ -1,24 +1,29 @@
 defmodule SimpletaskWeb.ProfessionalLive.Index do
   use SimpletaskWeb, :live_view
 
+  alias Simpletask.Policies.ProfessionalPolicy
   alias Simpletask.Queries.ProfessionalQuery
   alias Simpletask.Queries.SpecialtyQuery
-
   alias Simpletask.Schemas.ProfessionalSchema
 
   @impl true
   def mount(_params, _session, socket) do
-    professionals = ProfessionalQuery.list_professionals(socket.assigns.current_user)
-
-    {:ok,
-     stream(socket, :professionals, professionals)
-     |> assign(:specialty_options, SpecialtyQuery.list_specialty_options())}
+    {:ok, assign(socket, :specialty_options, SpecialtyQuery.list_specialty_options())}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    action = socket.assigns.live_action
+
+    case Bodyguard.permit(ProfessionalPolicy, policy_action(action), socket.assigns.current_user) do
+      :ok -> {:noreply, apply_action(socket, action, params)}
+      {:error, _} -> {:noreply, push_navigate(socket, to: ~p"/unauthorized")}
+    end
   end
+
+  defp policy_action(:index), do: :list_professionals
+  defp policy_action(:new), do: :new_professional
+  defp policy_action(:edit), do: :edit_professional
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
@@ -35,7 +40,8 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Lista de Profissionais")
-    |> assign(:professionals, nil)
+    |> assign(:professional, nil)
+    |> stream(:professionals, ProfessionalQuery.list_professionals(socket.assigns.current_user))
   end
 
   @impl true
@@ -45,9 +51,14 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    professional = ProfessionalQuery.get_professional!(id)
-    {:ok, _} = ProfessionalQuery.delete_professional(professional)
+    case Bodyguard.permit(ProfessionalPolicy, :delete_professional, socket.assigns.current_user) do
+      :ok ->
+        professional = ProfessionalQuery.get_professional!(id)
+        {:ok, _} = ProfessionalQuery.delete_professional(professional)
+        {:noreply, stream_delete(socket, :professionals, professional)}
 
-    {:noreply, stream_delete(socket, :professionals, professional)}
+      {:error, _} ->
+        {:noreply, push_navigate(socket, to: ~p"/unauthorized")}
+    end
   end
 end

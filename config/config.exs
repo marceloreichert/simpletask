@@ -77,6 +77,11 @@ config :simpletask,
     "CRM", "COREN", "CRP", "CRF", "CRO", "CREFITO", "CRN", "CRMV"
   ]
 
+# NX/EXLA — usa CPU via XLA (host). No Apple Silicon o XLA usa Metal automaticamente
+# quando compilado com suporte. Sem isso roda em BinaryBackend e leva 10-30 min.
+config :nx, default_backend: {EXLA.Backend, client: :host}
+config :exla, default_client: :host
+config :exla, :clients, host: [platform: :host]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

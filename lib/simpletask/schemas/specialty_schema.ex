@@ -9,13 +9,15 @@ defmodule Simpletask.Schemas.SpecialtySchema do
     :cbo_number
   ]
 
-  @fields_optional [:scheduling_allowed]
+  @fields_optional [:scheduling_allowed, :unit_id]
 
   schema "specialties" do
     field :name, :string
     field :description, :string
     field :cbo_number, :string
     field :scheduling_allowed, :boolean, default: false
+
+    belongs_to :unit, Simpletask.Schemas.UnitSchema
 
     timestamps(type: :utc_datetime)
   end

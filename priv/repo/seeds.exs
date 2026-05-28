@@ -108,9 +108,17 @@ Enum.each(professional_types, fn attrs ->
   })
 end)
 
-Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Unimed", logo: unimed_logo})
-Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Bradesco", logo: bradesco_logo})
-Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Particular", logo: particular_logo})
+hi_unimed =
+  Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Unimed", logo: unimed_logo})
+
+hi_bradesco =
+  Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{name: "Bradesco", logo: bradesco_logo})
+
+hi_particular =
+  Repo.insert!(%Simpletask.Schemas.HealthInsuranceSchema{
+    name: "Particular",
+    logo: particular_logo
+  })
 
 modality1 =
   Repo.insert!(%Simpletask.Schemas.ModalitySchema{
@@ -136,16 +144,18 @@ unit2 =
 
 {:ok, user} =
   Simpletask.Queries.AccountQuery.register_user(%{
-    email: "marcelo@powertask.com.br",
+    email: "marcelo@simpletask.com.br",
     password: "teste@12345678",
     name: "Marcelo Reichert",
     unit_id: unit.id
   })
 
+user =
+  Repo.update!(Simpletask.Accounts.User.roles_changeset(user, %{roles: [:master]}))
 
 {:ok, user2} =
   Simpletask.Queries.AccountQuery.register_user(%{
-    email: "marcelo2@powertask.com.br",
+    email: "marcelo2@simpletask.com.br",
     password: "teste@12345678",
     name: "Marcelo Reichert",
     unit_id: unit.id
@@ -299,9 +309,28 @@ pro8 =
     schedule_time_between_consultation: 10
   })
 
-  {:ok, _} = Simpletask.Queries.AccountQuery.update_user_professional(user.id, pro1.id)
+{:ok, _} = Simpletask.Queries.AccountQuery.update_user_professional(user.id, pro1.id)
 
+{:ok, lorena_user} =
+  Simpletask.Queries.AccountQuery.register_user(%{
+    email: "lorena@simpletask.com.br",
+    password: "teste@12345678",
+    name: "Lorena Azevedo",
+    unit_id: unit.id
+  })
 
+Repo.update!(Simpletask.Accounts.User.roles_changeset(lorena_user, %{roles: [:admin]}))
+{:ok, _} = Simpletask.Queries.AccountQuery.update_user_professional(lorena_user.id, pro3.id)
+
+{:ok, recepcao_user} =
+  Simpletask.Queries.AccountQuery.register_user(%{
+    email: "recepcao@simpletask.com.br",
+    password: "teste@12345678",
+    name: "Usuário da Recepção",
+    unit_id: unit.id
+  })
+
+Repo.update!(Simpletask.Accounts.User.roles_changeset(recepcao_user, %{roles: [:attend]}))
 
 patients = [
   %{
@@ -405,3 +434,20 @@ Enum.each(patients, fn attrs ->
     unit_id: unit.id
   })
 end)
+
+# Agenda para Marcelo Reichert — dia corrente, todos os convênios, 08:00–22:00
+today = DateTime.now!("America/Sao_Paulo") |> DateTime.to_date()
+
+{:ok, _} =
+  Simpletask.Queries.ScheduleQuery.create_schedule(%{
+    schedule_date: today,
+    schedule_time_start: ~T[08:00:00],
+    schedule_time_end: ~T[22:00:00],
+    schedule_consultation_time: pro1.schedule_consultation_time,
+    schedule_time_between_consultation: pro1.schedule_time_between_consultation,
+    schedule_type: "health_insurance",
+    health_insurance_ids: [hi_unimed.id, hi_bradesco.id, hi_particular.id],
+    professional_id: pro1.id,
+    room_id: room1.id,
+    unit_id: unit.id
+  })

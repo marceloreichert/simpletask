@@ -7,6 +7,11 @@ defmodule Simpletask.Application do
 
   @impl true
   def start(_type, _args) do
+    # Ativa EXLA como backend padrão para NX (Metal no Apple Silicon, CPU nos demais).
+    # Garante que o Whisper usa aceleração de hardware em vez do BinaryBackend (Elixir puro).
+    Nx.global_default_backend({EXLA.Backend, client: :host})
+    Nx.Defn.global_default_options(compiler: EXLA)
+
     children = [
       SimpletaskWeb.Telemetry,
       Simpletask.Repo,

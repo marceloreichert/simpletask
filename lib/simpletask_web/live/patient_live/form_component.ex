@@ -72,7 +72,6 @@ defmodule SimpletaskWeb.PatientLive.FormComponent do
         <.input_core field={@form[:document_id_number]} type="text" label="Document id number" />
         <.input_core field={@form[:document_id_uf]} type="text" label="Document id uf" />
         <.input_core field={@form[:document_id_issuer]} type="text" label="Document id issuer" />
-        <input type="hidden" name={@form[:unit_id].name} value={@form[:unit_id].value} />
         <.input_core
           field={@form[:document_id_issue_date]}
           type="date"
@@ -124,6 +123,8 @@ defmodule SimpletaskWeb.PatientLive.FormComponent do
   end
 
   defp save_patient(socket, :new, patient_params) do
+    patient_params = Map.put(patient_params, "unit_id", socket.assigns.current_user.unit_id)
+
     case PatientQuery.create_patient(patient_params) do
       {:ok, patient} ->
         notify_parent({:saved, patient})

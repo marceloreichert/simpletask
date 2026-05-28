@@ -48,9 +48,8 @@ Hooks.AudioRecorder = {
     this.isRecording = false
 
     const btn = this.el
-    const getTextarea = () => document.getElementById(btn.dataset.target)
 
-    console.log("[AudioRecorder] mounted, target:", btn.dataset.target)
+    console.log("[AudioRecorder] mounted")
 
     btn.addEventListener("click", async () => {
       console.log("[AudioRecorder] click! isRecording:", this.isRecording)
@@ -114,18 +113,6 @@ Hooks.AudioRecorder = {
       }
     })
 
-    // Transcrição concluída → insere no textarea sem re-renderizar o campo
-    this.handleEvent("append_transcription", ({ text }) => {
-      console.log("[AudioRecorder] append_transcription recebido:", text.slice(0, 50))
-      const ta = getTextarea()
-      if (ta) {
-        const sep = ta.value && !ta.value.endsWith(" ") && !ta.value.endsWith("\n") ? " " : ""
-        ta.value += sep + text
-        ta.dispatchEvent(new Event("input", { bubbles: true }))
-      } else {
-        console.warn("[AudioRecorder] textarea não encontrado:", btn.dataset.target)
-      }
-    })
   },
 
   destroyed() {

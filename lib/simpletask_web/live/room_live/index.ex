@@ -27,7 +27,7 @@ defmodule SimpletaskWeb.RoomLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Editar Sala")
-    |> assign(:room, RoomQuery.get_room!(id))
+    |> assign(:room, RoomQuery.get_room!(id, socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do

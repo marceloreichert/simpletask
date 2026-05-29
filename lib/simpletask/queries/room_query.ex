@@ -44,7 +44,11 @@ defmodule Simpletask.Queries.RoomQuery do
       ** (Ecto.NoResultsError)
 
   """
-  def get_room!(id), do: Repo.get!(RoomSchema, id)
+  def get_room!(id, user) do
+    RoomSchema
+    |> where([r], r.id == ^id and r.unit_id == ^user.unit_id)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a room.

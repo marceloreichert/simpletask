@@ -8,8 +8,8 @@ defmodule Simpletask.Queries.SpecialtyQuery do
 
   alias Simpletask.Schemas.SpecialtySchema
 
-  def list_specialty_options() do
-    Enum.map(list_specialties(), fn specialty -> {specialty.name, specialty.id} end)
+  def list_specialty_options(user) do
+    user |> list_specialties() |> Enum.map(fn s -> {s.name, s.id} end)
   end
 
   @doc """
@@ -21,8 +21,10 @@ defmodule Simpletask.Queries.SpecialtyQuery do
       [%Specialty{}, ...]
 
   """
-  def list_specialties do
-    Repo.all(SpecialtySchema)
+  def list_specialties(user) do
+    SpecialtySchema
+    |> where([s], s.unit_id == ^user.unit_id)
+    |> Repo.all()
   end
 
   @doc """
@@ -39,7 +41,11 @@ defmodule Simpletask.Queries.SpecialtyQuery do
       ** (Ecto.NoResultsError)
 
   """
-  def get_specialty!(id), do: Repo.get!(SpecialtySchema, id)
+  def get_specialty!(id, user) do
+    SpecialtySchema
+    |> where([s], s.id == ^id and s.unit_id == ^user.unit_id)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a specialty.

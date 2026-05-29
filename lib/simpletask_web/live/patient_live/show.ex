@@ -18,7 +18,7 @@ defmodule SimpletaskWeb.PatientLive.Show do
         {:noreply,
          socket
          |> assign(:page_title, page_title(action))
-         |> assign(:patient, PatientQuery.get_patient!(id))}
+         |> assign(:patient, PatientQuery.get_patient!(id, socket.assigns.current_user))}
 
       {:error, _} ->
         {:noreply, push_navigate(socket, to: ~p"/unauthorized")}

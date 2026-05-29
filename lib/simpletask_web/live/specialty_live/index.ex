@@ -27,7 +27,7 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Editar Especialidade")
-    |> assign(:specialty, SpecialtyQuery.get_specialty!(id))
+    |> assign(:specialty, SpecialtyQuery.get_specialty!(id, socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -40,7 +40,7 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
     socket
     |> assign(:page_title, "Lista de Especialidades")
     |> assign(:specialty, nil)
-    |> stream(:specialties, SpecialtyQuery.list_specialties())
+    |> stream(:specialties, SpecialtyQuery.list_specialties(socket.assigns.current_user))
   end
 
   @impl true
@@ -52,7 +52,7 @@ defmodule SimpletaskWeb.SpecialtyLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     case Bodyguard.permit(SpecialtyPolicy, :delete_specialty, socket.assigns.current_user) do
       :ok ->
-        specialty = SpecialtyQuery.get_specialty!(id)
+        specialty = SpecialtyQuery.get_specialty!(id, socket.assigns.current_user)
         {:ok, _} = SpecialtyQuery.delete_specialty(specialty)
         {:noreply, stream_delete(socket, :specialties, specialty)}
 

@@ -42,7 +42,11 @@ defmodule Simpletask.Queries.PatientQuery do
       ** (Ecto.NoResultsError)
 
   """
-  def get_patient!(id), do: Repo.get!(PatientSchema, id)
+  def get_patient!(id, user) do
+    PatientSchema
+    |> where([p], p.id == ^id and p.unit_id == ^user.unit_id)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a patient.

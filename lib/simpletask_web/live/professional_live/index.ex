@@ -8,7 +8,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :specialty_options, SpecialtyQuery.list_specialty_options())}
+    {:ok, assign(socket, :specialty_options, SpecialtyQuery.list_specialty_options(socket.assigns.current_user))}
   end
 
   @impl true
@@ -28,7 +28,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Editar Dados do Profissional")
-    |> assign(:professional, ProfessionalQuery.get_professional!(id))
+    |> assign(:professional, ProfessionalQuery.get_professional!(id, socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do

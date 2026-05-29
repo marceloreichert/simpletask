@@ -18,7 +18,7 @@ defmodule SimpletaskWeb.RoomLive.Show do
         {:noreply,
          socket
          |> assign(:page_title, page_title(action))
-         |> assign(:room, RoomQuery.get_room!(id))}
+         |> assign(:room, RoomQuery.get_room!(id, socket.assigns.current_user))}
 
       {:error, _} ->
         {:noreply, push_navigate(socket, to: ~p"/unauthorized")}

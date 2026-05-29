@@ -18,7 +18,7 @@ defmodule SimpletaskWeb.SpecialtyLive.Show do
         {:noreply,
          socket
          |> assign(:page_title, page_title(action))
-         |> assign(:specialty, SpecialtyQuery.get_specialty!(id))}
+         |> assign(:specialty, SpecialtyQuery.get_specialty!(id, socket.assigns.current_user))}
 
       {:error, _} ->
         {:noreply, push_navigate(socket, to: ~p"/unauthorized")}

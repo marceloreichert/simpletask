@@ -18,7 +18,7 @@ defmodule SimpletaskWeb.ProfessionalLive.Show do
         {:noreply,
          socket
          |> assign(:page_title, page_title(action))
-         |> assign(:professional, ProfessionalQuery.get_professional!(id))}
+         |> assign(:professional, ProfessionalQuery.get_professional!(id, socket.assigns.current_user))}
 
       {:error, _} ->
         {:noreply, push_navigate(socket, to: ~p"/unauthorized")}

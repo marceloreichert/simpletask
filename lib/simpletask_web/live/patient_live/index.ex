@@ -27,7 +27,7 @@ defmodule SimpletaskWeb.PatientLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Editar Paciente")
-    |> assign(:patient, PatientQuery.get_patient!(id))
+    |> assign(:patient, PatientQuery.get_patient!(id, socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do
